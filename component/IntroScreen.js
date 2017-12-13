@@ -1,23 +1,22 @@
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
- * @flow
+ * @flow https://github.com/vault-development/react-native-svg-uri/blob/master/README.md
  */
 
 import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
-  View
+  View,
+  Image,
 } from 'react-native';
-import IntroScreen from './component/IntroScreen';
-import CountryScreen from './component/CountryScreen';
-
-export default class App extends Component<{}> {
+import LogoWhite from '../src/icon/logo-ngang.png';
+export default class IntroScreen extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <CountryScreen />
+      <Image  source={LogoWhite} />
       </View>
     );
   }
@@ -28,7 +27,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    //backgroundColor: '#D0021B',
+    backgroundColor: '#D0021B',
   },
 
 });
