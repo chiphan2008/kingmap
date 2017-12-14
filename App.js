@@ -12,12 +12,13 @@ import {
 } from 'react-native';
 import IntroScreen from './component/IntroScreen';
 import CountryScreen from './component/CountryScreen';
+import CityScreen from './component/CityScreen';
 
 export default class App extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <CountryScreen />
+        <CityScreen />
       </View>
     );
   }

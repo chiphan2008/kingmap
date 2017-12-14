@@ -9,42 +9,51 @@ const {height, width} = Dimensions.get('window');
 export default class CountryScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {value : "Vietname"}
+    this.state = {
+      valueCountry : "Vietname",
+    }
   }
-  onSelect(value, label) {
-    this.setState({value : value});
+  onSelectCountry(value, label) {
+    this.setState({
+      valueCountry : value
+    });
   }
+
   render() {
-    const {container, imgLogo, title, selectBox, btnSkip, btnNext, btnWrap} = styles;
+    const {
+      container, imgLogo, title,
+      selectBoxCountry, selectBoxCity, OptionItem, optionListStyle,
+      btnSkip, btnNext, btnWrap
+    } = styles;
     return (
       <View style={container}>
         <Image style={imgLogo} source={LogoLarge} />
         <Text style={title}>COUNTRY/ CITY</Text>
         <Select
-              onSelect = {this.onSelect.bind(this)}
-              defaultText  = {this.state.value}
-              style = {selectBox}
+              onSelect = {this.onSelectCountry.bind(this)}
+              defaultText  = {this.state.valueCountry}
+              style = {selectBoxCountry}
               textStyle = {{color:'#5b89ab'}}
-              optionListStyle={{ borderColor : "#D0021B", width: 200, marginTop:20}}
+              optionListStyle={optionListStyle}
               transparent
               indicatorColor="#5b89ab"
               indicator="down"
+              indicatorSize={7}
             >
-            <Option value = {{name : "azhar"}}>Azhar</Option>
-            <Option value = "johnceena">Johnceena</Option>
-            <Option value = "undertaker">Undertaker</Option>
-            <Option value = "Daniel">Daniel</Option>
-            <Option value = "Roman">Roman</Option>
-            <Option value = "Stonecold">Stonecold</Option>
-            <Option value = "Rock">Rock</Option>
-            <Option value = "Sheild">Sheild</Option>
-            <Option value = "Orton">Orton</Option>
+            <Option style={OptionItem} value = {{name : "azhar"}}>Azhar</Option>
+            <Option style={OptionItem} value = "johnceena">Johnceena</Option>
+            <Option style={OptionItem} value = "undertaker">Undertaker</Option>
+            <Option style={OptionItem} value = "Daniel">Daniel</Option>
+            <Option style={OptionItem} value = "Roman">Roman</Option>
+            <Option style={OptionItem} value = "Stonecold">Stonecold</Option>
+            <Option style={OptionItem} value = "Rock">Rock</Option>
+            <Option style={OptionItem} value = "Sheild">Sheild</Option>
+            <Option style={OptionItem} value = "Orton">Orton</Option>
         </Select>
 
         <View style={btnWrap}>
           <Text style={btnSkip} >Skip</Text>
           <Text style={btnNext} >Next</Text>
-
         </View>
       </View>
     );
@@ -66,15 +75,38 @@ const styles = StyleSheet.create({
     fontSize: 22,
     marginBottom: 20,
   },
-  selectBox : {
+  selectBoxCountry : {
     borderRadius : 5,
     borderWidth : 1,
     borderColor : "#e0e8ed",
     width: width - 50,
-    marginBottom: 20,
+    marginBottom: 50,
+    backgroundColor: '#fff',
+    paddingTop: 15,
+    paddingBottom: 15,
+  },
+  OptionItem : {
+    borderBottomColor: '#e0e8ed',
+    borderBottomWidth: 1,
+    paddingTop: 15,
+    paddingBottom: 15,
+  },
+  optionListStyle : {
+    borderRadius : 5,
+    width: width - 50,
+    height: 200,
+    top: 132,
+    borderColor : "#fff",
+    marginTop:20,
+    backgroundColor: '#fff',
+    shadowOffset:{  width: 2,  height: 2,  },
+    shadowColor: '#ddd',
+    shadowOpacity: .5,
   },
   btnWrap : {
     flexDirection: 'row',
+    width: width - 50,
+    justifyContent: 'space-between',
   },
   btnSkip : {
     padding:10,
@@ -83,7 +115,6 @@ const styles = StyleSheet.create({
     borderColor : "#D0021B",
     borderRadius : 5,
     width : (width - 80)/2,
-    marginRight: 20,
     textAlign: 'center',
   },
   btnNext : {
@@ -93,6 +124,7 @@ const styles = StyleSheet.create({
     borderColor : "#fff",
     backgroundColor: '#D0021B',
     borderRadius : 5,
+    overflow: 'hidden',
     width : (width - 80)/2,
     textAlign: 'center',
   },
