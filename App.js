@@ -13,12 +13,13 @@ import {
 import IntroScreen from './component/IntroScreen';
 import CountryScreen from './component/CountryScreen';
 import CityScreen from './component/CityScreen';
+import LoginScreen from './component/LoginScreen';
 
 export default class App extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <CityScreen />
+        <LoginScreen />
       </View>
     );
   }

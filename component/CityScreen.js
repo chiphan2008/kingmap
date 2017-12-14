@@ -11,8 +11,8 @@ export default class CountryScreen extends Component {
     super(props);
     this.state = {
       pressStatus: false,
-      valueCountry : "Việt Nam",
-      valueCity : "Chọn Thành Phố",
+      valueCountry : "Vietname",
+      valueCity : "Please choose city",
     }
   }
   _onHideUnderlay(){
