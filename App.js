@@ -14,12 +14,15 @@ import IntroScreen from './component/IntroScreen';
 import CountryScreen from './component/CountryScreen';
 import CityScreen from './component/CityScreen';
 import LoginScreen from './component/LoginScreen';
+import SignUpScreen from './component/SignUpScreen';
+import ForgotPasswordScreen from './component/ForgotPasswordScreen';
+import VerifyAccountScreen from './component/VerifyAccountScreen';
 
 export default class App extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <LoginScreen />
+        <VerifyAccountScreen />
       </View>
     );
   }
