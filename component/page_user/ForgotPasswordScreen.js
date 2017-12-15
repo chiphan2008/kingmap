@@ -2,10 +2,10 @@
 
 import React, { Component } from 'react';
 import { Platform, View, Text, Image, Button, StyleSheet, Dimensions, TextInput } from 'react-native';
-import { CheckBox } from 'react-native-elements';
-import LogoLarge from '../src/icon/logo-large.png';
-import FacebookColor from '../src/icon/Facebook_color.png';
-import GoogleColor from '../src/icon/Google_color.png';
+//import { CheckBox } from 'react-native-elements';
+import LogoHome from '../../src/icon/ic-home/Logo-home.png';
+import FacebookColor from '../../src/icon/Facebook_color.png';
+import GoogleColor from '../../src/icon/Google_color.png';
 const {height, width} = Dimensions.get('window');
 
 export default class CountryScreen extends Component {
@@ -18,22 +18,19 @@ export default class CountryScreen extends Component {
   render() {
     const {
       container, imgLogo, title, txtInput,mrgTop,
-      btn, colorPress, contentWrap,txtAlign,verify
+      btn, colorPress, contentWrap,txtAlign,
     } = styles;
     return (
       <View style={container}>
         <View style={contentWrap}>
               <Image style={imgLogo} source={LogoLarge} />
-              <Text style={title}>VERIFY ACCOUNT</Text>
-              <View style={verify}>
-                <TextInput style={txtInput} returnKeyType={"next"} maxLength = {1} selectionColor='#5b89ab' placeholderTextColor="#ddd" />
-                <TextInput style={txtInput} returnKeyType={"next"} maxLength = {1}  selectionColor='#5b89ab' placeholderTextColor="#ddd" />
-                <TextInput style={txtInput} returnKeyType={"next"} maxLength = {1}  selectionColor='#5b89ab' placeholderTextColor="#ddd" />
-                <TextInput style={txtInput} returnKeyType={"done"} maxLength = {1}  selectionColor='#5b89ab' placeholderTextColor="#ddd" />
+              <Text style={title}>FORGOR PASSWORD</Text>
+              <View style={mrgTop}>
+              <TextInput style={txtInput} selectionColor='#5b89ab' placeholder="Email" placeholderTextColor="#ddd" />
               </View>
               <Text style={[mrgTop,txtAlign]}>We will send you a password {"\n"} confirmation email.</Text>
 
-              <Text style={[btn,colorPress]}>CONTINUE</Text>
+              <Text style={[btn,colorPress]}>SEND</Text>
 
         </View>
       </View>
@@ -53,7 +50,7 @@ const styles = StyleSheet.create({
     width : 60,
     height : 60,
   },
-  verify : {flexDirection:'row',justifyContent: 'space-between',width: (width - 100),},
+
   title : {
     fontSize: 22,
     marginTop: 10,
@@ -62,10 +59,9 @@ const styles = StyleSheet.create({
     borderColor : "#e0e8ed",
     padding:15,
     borderRadius : 5,
-    width: (width - 50)/6,
+    width: width - 50,
     borderWidth: Platform.OS === 'ios' ? 1 : 0,
     marginTop: Platform.OS === 'ios' ? 10 : 0,
-    textAlign: 'center',
   },
   btn : {
     paddingTop:15,

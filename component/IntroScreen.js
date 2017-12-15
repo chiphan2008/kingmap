@@ -11,12 +11,12 @@ import {
   View,
   Image,
 } from 'react-native';
-import LogoWhite from '../src/icon/logo-ngang.png';
+import LogoWhite from '../src/icon/Logo-intro.png';
 export default class IntroScreen extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-      <Image  source={LogoWhite} />
+      <Image style={styles.imgLogo} source={LogoWhite} />
       </View>
     );
   }
@@ -24,10 +24,12 @@ export default class IntroScreen extends Component<{}> {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#D0021B',
   },
-
+  imgLogo: {
+    height:80,
+    width:170
+  },
 });

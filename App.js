@@ -8,32 +8,52 @@ import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
-  View
+  View,
+
 } from 'react-native';
-import IntroScreen from './component/IntroScreen';
-import CountryScreen from './component/CountryScreen';
-import CityScreen from './component/CityScreen';
-import LoginScreen from './component/LoginScreen';
-import SignUpScreen from './component/SignUpScreen';
-import ForgotPasswordScreen from './component/ForgotPasswordScreen';
-import VerifyAccountScreen from './component/VerifyAccountScreen';
+import { StackNavigator } from 'react-navigation';
+import FadeView from './component/FadeOutView';
 
-export default class App extends Component<{}> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <VerifyAccountScreen />
-      </View>
-    );
-  }
-}
+import LoginScreen from './component/page_user/LoginScreen';
+import MainScreen from './component/main/MainScreen';
+import SignUpScreen from './component/page_user/SignUpScreen';
+import ForgotPasswordScreen from './component/page_user/ForgotPasswordScreen';
+import VerifyAccountScreen from './component/page_user/VerifyAccountScreen';
+//const {height, width} = Dimensions.get('window');
+const IntroScr = ({ navigation }) => (
+      <FadeView navigation={navigation} />
+);
+const MainScr = ({ navigation }) => (
+      <MainScreen navigation={navigation} />
+);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    //backgroundColor: '#D0021B',
+const App = StackNavigator({
+  IntroSrc: {
+    screen: IntroScr,
+    navigationOptions: {
+      //headerVisible: false,
+      //headerMode:'none',
+      //headerTitle: '<Header />',
+      //header: <Header  />,
+      //headerStyle: styles.header,
+      //headerTitleStyle: styles.colorhead,
+    },
   },
+  MainScr: {
+    screen: MainScreen,
+    navigationOptions: {
+    //headerMode:'none',
 
-});
+      //headerTitle: '<Header />',
+      //header: <Header  />,
+      //headerStyle: styles.header,
+      //headerTitleStyle: styles.colorhead,
+    },
+  },
+},
+{
+  headerMode: 'none',
+
+ });
+
+export default App;

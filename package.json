@@ -9,7 +9,10 @@
   "dependencies": {
     "react": "16.0.0",
     "react-native": "0.51.0",
-    "react-native-chooser": "^1.7.0"
+    "react-native-chooser": "^1.7.0",
+    "react-native-drawer": "^2.5.0",
+    "react-navigation": "^1.0.0-beta.19",
+    "rn-round-checkbox": "^0.3.3"
   },
   "devDependencies": {
     "babel-jest": "21.2.0",

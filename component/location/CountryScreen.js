@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { View, Text, Image, Button, StyleSheet, Dimensions } from 'react-native';
 import {Select, Option} from "react-native-chooser";
-import LogoLarge from '../src/icon/logo-large.png';
+import LogoHome from '../../src/icon/ic-home/Logo-home.png';
 const {height, width} = Dimensions.get('window');
 
 export default class CountryScreen extends Component {

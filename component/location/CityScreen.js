@@ -3,8 +3,16 @@
 import React, { Component } from 'react';
 import { View, Text, Image, Button, StyleSheet, Dimensions, TouchableHighlight } from 'react-native';
 import {Select, Option} from "react-native-chooser";
-import LogoLarge from '../src/icon/logo-large.png';
+import { StackNavigator } from 'react-navigation';
+
+import Drawer from 'react-native-drawer';
+import MainScreen from '../main/MainScreen';
+import LogoHome from '../../src/icon/ic-home/Logo-home.png';
 const {height, width} = Dimensions.get('window');
+
+const MainScr = ({ navigation }) => (
+      <MainScreen navigation={navigation} />
+);
 
 export default class CountryScreen extends Component {
   constructor(props) {
@@ -15,12 +23,14 @@ export default class CountryScreen extends Component {
       valueCity : "Please choose city",
     }
   }
-  _onHideUnderlay(){
-    this.setState({ pressStatus: false });
+
+  closeControlPanel = () => {
+    this._drawer.close()
   }
-  _onShowUnderlay(){
-    this.setState({ pressStatus: true });
+  openControlPanel = () => {
+    this._drawer.open()
   }
+
   onSelectCountry(value, label) {
     this.setState({
       valueCountry : value
@@ -32,6 +42,7 @@ export default class CountryScreen extends Component {
     });
   }
   render() {
+    const {navigation} = this.props;
     const {
       container, imgLogo, title,
       selectBox, selectBoxCountry, selectBoxCity, OptionItem,
@@ -42,7 +53,7 @@ export default class CountryScreen extends Component {
       <View style={container}>
         <View  style={btnWrap}></View>
         <View style={contentWrap}>
-              <Image style={imgLogo} source={LogoLarge} />
+              <Image style={imgLogo} source={LogoHome} />
               <Text style={title}>COUNTRY/ CITY</Text>
               <Select
                     onSelect = {this.onSelectCountry.bind(this)}
@@ -55,15 +66,9 @@ export default class CountryScreen extends Component {
                     indicator="down"
                     indicatorSize={7}
                   >
-                  <Option style={OptionItem} value = {{name : "azhar"}}>Azhar</Option>
-                  <Option style={OptionItem} value = "johnceena">Johnceena</Option>
-                  <Option style={OptionItem} value = "undertaker">Undertaker</Option>
-                  <Option style={OptionItem} value = "Daniel">Daniel</Option>
-                  <Option style={OptionItem} value = "Roman">Roman</Option>
-                  <Option style={OptionItem} value = "Stonecold">Stonecold</Option>
-                  <Option style={OptionItem} value = "Rock">Rock</Option>
-                  <Option style={OptionItem} value = "Sheild">Sheild</Option>
-                  <Option style={OptionItem} value = "Orton">Orton</Option>
+
+                  <Option style={OptionItem} value = "vietnam">Vietnam</Option>
+
               </Select>
 
               <Select
@@ -77,7 +82,6 @@ export default class CountryScreen extends Component {
                     indicator="down"
                     indicatorSize={7}
                   >
-                  <Option style={OptionItem} value = {{name : "azhar"}}>Azhar</Option>
                   <Option style={OptionItem} value = "johnceena">Johnceena</Option>
                   <Option style={OptionItem} value = "undertaker">Undertaker</Option>
                   <Option style={OptionItem} value = "Daniel">Daniel</Option>
@@ -89,13 +93,13 @@ export default class CountryScreen extends Component {
               </Select>
         </View>
         <View style={btnWrap}>
+
         <TouchableHighlight
             style={this.state.pressStatus ? btnPress : btn }
-            onHideUnderlay={this._onHideUnderlay.bind(this)}
-            onShowUnderlay={this._onShowUnderlay.bind(this)}
-            activeOpacity={0}
+            onPress={() => {navigation.navigate('MainScr')}}
+
           >
-            <Text style={ this.state.pressStatus ? colorPress : colorNext }>Next</Text>
+            <Text style={ colorNext }>Next</Text>
             </TouchableHighlight>
         </View>
       </View>
@@ -143,7 +147,8 @@ const styles = StyleSheet.create({
   optionListStyle : {
     borderRadius : 5,
     width: width - 50,
-    height: 200,
+    minHeight: 200,
+    maxHeight: 200,
     borderColor : "#fff",
     marginTop:15,
     backgroundColor: '#fff',
