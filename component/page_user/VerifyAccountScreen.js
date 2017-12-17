@@ -26,10 +26,10 @@ export default class CountryScreen extends Component {
               <Image style={imgLogo} source={LogoLarge} />
               <Text style={title}>VERIFY ACCOUNT</Text>
               <View style={verify}>
-                <TextInput style={txtInput} returnKeyType={"next"} maxLength = {1} selectionColor='#5b89ab' placeholderTextColor="#ddd" />
-                <TextInput style={txtInput} returnKeyType={"next"} maxLength = {1}  selectionColor='#5b89ab' placeholderTextColor="#ddd" />
-                <TextInput style={txtInput} returnKeyType={"next"} maxLength = {1}  selectionColor='#5b89ab' placeholderTextColor="#ddd" />
-                <TextInput style={txtInput} returnKeyType={"done"} maxLength = {1}  selectionColor='#5b89ab' placeholderTextColor="#ddd" />
+                <TextInput underlineColorAndroid='transparent' style={txtInput} returnKeyType={"next"} maxLength = {1} selectionColor='#5b89ab' placeholderTextColor="#ddd" />
+                <TextInput underlineColorAndroid='transparent' style={txtInput} returnKeyType={"next"} maxLength = {1}  selectionColor='#5b89ab' placeholderTextColor="#ddd" />
+                <TextInput underlineColorAndroid='transparent' style={txtInput} returnKeyType={"next"} maxLength = {1}  selectionColor='#5b89ab' placeholderTextColor="#ddd" />
+                <TextInput underlineColorAndroid='transparent' style={txtInput} returnKeyType={"done"} maxLength = {1}  selectionColor='#5b89ab' placeholderTextColor="#ddd" />
               </View>
               <Text style={[mrgTop,txtAlign]}>We will send you a password {"\n"} confirmation email.</Text>
 
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     padding:15,
     borderRadius : 5,
     width: (width - 50)/6,
-    borderWidth: Platform.OS === 'ios' ? 1 : 0,
+    borderWidth: 1,
     marginTop: Platform.OS === 'ios' ? 10 : 0,
     textAlign: 'center',
   },

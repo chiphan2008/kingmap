@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { Animated, Image, View, Dimensions } from 'react-native';
+import util from 'util';
 import CityScreen from './location/CityScreen';
 import IntroScreen from './IntroScreen';
 import LogoWhite from '../src/icon/Logo-intro.png';
 const {height, width} = Dimensions.get('window');
 
 export default class FadeView extends Component {
-  state = {
-    fadeAnimOut: new Animated.Value(1),
-    fadeAnimIn: new Animated.Value(0),
+  constructor(props) {
+    super(props);
+    this.state = {
+      fadeAnimOut: new Animated.Value(1),
+      fadeAnimIn: new Animated.Value(0),
+    }
   }
   componentDidMount() {
 
@@ -17,13 +21,13 @@ export default class FadeView extends Component {
         this.state.fadeAnimOut,            // The animated value to drive
         {
           toValue: 0,                   // Animate to opacity: 1 (opaque)
-          duration: 5000,
+          duration: 3000,
         }),
         Animated.timing(                  // Animate over time
           this.state.fadeAnimIn,            // The animated value to drive
           {
             toValue: 1,                   // Animate to opacity: 1 (opaque)
-            duration: 5000,
+            duration: 4000,
           }
         ),
 
@@ -31,7 +35,7 @@ export default class FadeView extends Component {
 
   }
   render() {
-    //const CurrentView = this.state.fadeAnimOut == 0 ?  CityScreen : IntroScreen;
+    //console.log("this.props.fadeview=",util.inspect(this.props.navigation,true,null));
     let { fadeAnimOut, fadeAnimIn } = this.state;
     const {navigation} = this.props;
     return (
@@ -60,10 +64,13 @@ export default class FadeView extends Component {
               opacity: fadeAnimIn,
             }}
           >
-            <CityScreen  navigation={navigation}/>
+
+            <CityScreen navigation={navigation}/>
           </Animated.View>
 
       </View>
     );
   }
+
+
 }

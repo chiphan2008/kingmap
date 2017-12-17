@@ -26,11 +26,11 @@ export default class CountryScreen extends Component {
               <Image style={imgLogo} source={LogoLarge} />
               <Text style={title}>REGISTER</Text>
               <View style={mrgTop}>
-              <TextInput style={txtInput} selectionColor='#5b89ab' placeholder="Full name" placeholderTextColor="#ddd" />
-              <TextInput style={txtInput} selectionColor='#5b89ab' placeholder="Email" placeholderTextColor="#ddd" />
-              <TextInput style={txtInput} selectionColor='#5b89ab' placeholder="Phone number" placeholderTextColor="#ddd" />
-              <TextInput style={txtInput} selectionColor='#5b89ab' placeholder="Password" placeholderTextColor="#ddd" secureTextEntry/>
-              <TextInput style={txtInput} selectionColor='#5b89ab' placeholder="Re-Password" placeholderTextColor="#ddd" secureTextEntry />
+              <TextInput underlineColorAndroid='transparent' style={txtInput} selectionColor='#5b89ab' placeholder="Full name" placeholderTextColor="#ddd" />
+              <TextInput underlineColorAndroid='transparent' style={txtInput} selectionColor='#5b89ab' placeholder="Email" placeholderTextColor="#ddd" />
+              <TextInput underlineColorAndroid='transparent' style={txtInput} selectionColor='#5b89ab' placeholder="Phone number" placeholderTextColor="#ddd" />
+              <TextInput underlineColorAndroid='transparent' style={txtInput} selectionColor='#5b89ab' placeholder="Password" placeholderTextColor="#ddd" secureTextEntry/>
+              <TextInput underlineColorAndroid='transparent' style={txtInput} selectionColor='#5b89ab' placeholder="Re-Password" placeholderTextColor="#ddd" secureTextEntry />
               </View>
 
               <Text style={[btn,colorPress]}>REGISTER</Text>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     padding:15,
     borderRadius : 5,
     width: width - 50,
-    borderWidth: Platform.OS === 'ios' ? 1 : 0,
+    borderWidth: 1,
     marginTop: Platform.OS === 'ios' ? 10 : 0,
   },
   btn : {

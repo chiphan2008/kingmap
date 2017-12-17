@@ -1,18 +1,15 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { View, Text, Image, Button, StyleSheet, Dimensions, TouchableHighlight } from 'react-native';
+import { Platform, View, Text, Image, Button, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import {Select, Option} from "react-native-chooser";
-import { StackNavigator } from 'react-navigation';
+import util from 'util';
 
-import Drawer from 'react-native-drawer';
-import MainScreen from '../main/MainScreen';
+//import image
 import LogoHome from '../../src/icon/ic-home/Logo-home.png';
+import bgMap from '../../src/icon/bg-map.png';
 const {height, width} = Dimensions.get('window');
 
-const MainScr = ({ navigation }) => (
-      <MainScreen navigation={navigation} />
-);
 
 export default class CountryScreen extends Component {
   constructor(props) {
@@ -22,13 +19,6 @@ export default class CountryScreen extends Component {
       valueCountry : "Vietname",
       valueCity : "Please choose city",
     }
-  }
-
-  closeControlPanel = () => {
-    this._drawer.close()
-  }
-  openControlPanel = () => {
-    this._drawer.open()
   }
 
   onSelectCountry(value, label) {
@@ -43,14 +33,18 @@ export default class CountryScreen extends Component {
   }
   render() {
     const {navigation} = this.props;
+    //console.log("this.props.CityScreen=",util.inspect(this.props.navigation,false,null));
     const {
-      container, imgLogo, title,
+      container, imgLogo, title, wrapper,bgImg,
       selectBox, selectBoxCountry, selectBoxCity, OptionItem,
       optionListStyle, optionListStyleCountry, optionListStyleCity,
       btn, btnPress, colorPress, colorNext, btnWrap, contentWrap,
     } = styles;
     return (
+
       <View style={container}>
+        <Image source={bgMap} style={bgImg} />
+        <View style={wrapper}>
         <View  style={btnWrap}></View>
         <View style={contentWrap}>
               <Image style={imgLogo} source={LogoHome} />
@@ -94,25 +88,40 @@ export default class CountryScreen extends Component {
         </View>
         <View style={btnWrap}>
 
-        <TouchableHighlight
+        <TouchableOpacity
             style={this.state.pressStatus ? btnPress : btn }
             onPress={() => {navigation.navigate('MainScr')}}
 
           >
             <Text style={ colorNext }>Next</Text>
-            </TouchableHighlight>
+            </TouchableOpacity>
         </View>
-      </View>
+        </View>
+  </View>
+
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'space-between',
+    width,
+    height,
   },
-  btnWrap : { flex : 1 },
+  bgImg : {
+    width,
+    height,
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wrapper: {
+    flex: 1,
+    position: 'relative',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+  },
+  btnWrap : { flex : 1,alignItems: 'center' },
   contentWrap : { flex : 3,alignItems: 'center',justifyContent: 'center',},
   imgLogo : {
     width : 60,
@@ -133,10 +142,10 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   selectBoxCountry : {
-    marginBottom: 15,
+    marginBottom: 10,
   },
   selectBoxCity : {
-    marginBottom: 80,
+    marginBottom: 75,
   },
   OptionItem : {
     borderBottomColor: '#e0e8ed',
@@ -150,6 +159,7 @@ const styles = StyleSheet.create({
     minHeight: 200,
     maxHeight: 200,
     borderColor : "#fff",
+    borderWidth : 0,
     marginTop:15,
     backgroundColor: '#fff',
     shadowOffset:{  width: 2,  height: 2,  },
@@ -157,10 +167,10 @@ const styles = StyleSheet.create({
     shadowOpacity: .5,
   },
   optionListStyleCountry : {
-    top: 110,
+    top: Platform.OS === 'ios' ? 113 : 125,
   },
   optionListStyleCity : {
-    top: 172,
+    top: Platform.OS === 'ios' ? 172 : 185,
   },
   btn: {
     paddingTop:15,

@@ -29,8 +29,8 @@ export default class CountryScreen extends Component {
               <Image style={imgLogo} source={LogoLarge} />
               <Text style={title}>LOGIN</Text>
               <View style={mrgTop}>
-              <TextInput style={txtInput} selectionColor='#5b89ab' placeholder="Email/ Phone number" placeholderTextColor="#ddd" />
-              <TextInput style={txtInput} selectionColor='#5b89ab' placeholder="Password" placeholderTextColor="#ddd" secureTextEntry />
+              <TextInput underlineColorAndroid='transparent' style={txtInput} selectionColor='#5b89ab' placeholder="Email/ Phone number" placeholderTextColor="#ddd" />
+              <TextInput underlineColorAndroid='transparent' style={txtInput} selectionColor='#5b89ab' placeholder="Password" placeholderTextColor="#ddd" secureTextEntry />
               </View>
               <View style={wrapAdv}>
 
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     padding:15,
     borderRadius : 5,
     width: width - 50,
-    borderWidth: Platform.OS === 'ios' ? 1 : 0,
+    borderWidth: 1,
     marginTop: 15,
   },
   btn : {

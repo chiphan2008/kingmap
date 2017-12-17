@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#D0021B',
+    //backgroundColor: '#D0021B',
   },
   imgLogo: {
     height:80,

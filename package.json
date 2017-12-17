@@ -12,7 +12,8 @@
     "react-native-chooser": "^1.7.0",
     "react-native-drawer": "^2.5.0",
     "react-navigation": "^1.0.0-beta.19",
-    "rn-round-checkbox": "^0.3.3"
+    "rn-round-checkbox": "^0.3.3",
+    "util":"*"
   },
   "devDependencies": {
     "babel-jest": "21.2.0",
