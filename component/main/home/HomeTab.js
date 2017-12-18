@@ -1,13 +1,21 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput} from 'react-native';
+import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput, TouchableOpacity} from 'react-native';
 const {height, width} = Dimensions.get('window');
 import bgMap from '../../../src/icon/bg-map.png';
 import logoTop from '../../../src/icon/ic-white/Logo-ngang.png';
 import searchIC from '../../../src/icon/ic-gray/ic-search.png';
 import infoIC from '../../../src/icon/ic-white/ic-analysis.png';
 import socialIC from '../../../src/icon/ic-white/ic-social.png';
+
+import upDD from '../../../src/icon/ic-white/ic-dropdown_up.png';
+import locationDD from '../../../src/icon/ic-gray/ic-location.png';
+import onlineDD from '../../../src/icon/ic-gray/ic-online.png';
+import checkDD from '../../../src/icon/ic-gray/ic-check-gray.png';
+import likeDD from '../../../src/icon/ic-gray/ic-like.png';
+import socialDD from '../../../src/icon/ic-gray/ic-social.png';
+
 
 import plusIC from '../../../src/icon/ic-home/ic-plus.png';
 import hotelOval from '../../../src/icon/ic-home/Oval-hotel.png';
@@ -25,6 +33,8 @@ export default class Hometab extends Component {
     super(props);
     this.state = {
       valueLang : "VIE",
+      showInfo : false,
+      showShare : false,
     }
   }
   onSelectLang(value, label) {
@@ -36,8 +46,9 @@ export default class Hometab extends Component {
     const {
       container, bgImg,
       headStyle, headContent,imgLogoTop,imgSocial, imgInfo,wrapIcRight,
-      selectBox,optionListStyle,OptionItem,inputSearch,
-      wrapContent,leftContent,rightContent,middleContent,imgContent,labelCat
+      selectBox,optionListStyle,OptionItem,inputSearch,show,hide,colorTextPP,colorNumPP,
+      wrapContent,leftContent,rightContent,middleContent,imgContent,labelCat,
+      plusStyle,popover,overLayout,listOver,imgMargin,imgUp,imgUpInfo,imgUpShare
     } = styles;
     return (
       <View style={container}>
@@ -56,12 +67,16 @@ export default class Hometab extends Component {
                   transparent
                 >
                 <Option style={OptionItem} value ="VIE">VIE</Option>
-                <Option value="ENG">ENG</Option>
+                <Option style={OptionItem} value="ENG">ENG</Option>
             </Select>
             <Image source={logoTop} style={imgLogoTop} />
                 <View style={wrapIcRight}>
+                  <TouchableOpacity onPress={()=> this.setState({showInfo:!this.state.showInfo,showShare:false}) } >
                     <Image source={infoIC} style={imgInfo} />
-                    <Image source={socialIC} style={imgSocial} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={()=> this.setState({showShare:!this.state.showShare,showInfo:false}) } >
+                      <Image source={socialIC} style={imgSocial} />
+                  </TouchableOpacity>
                 </View>
 
           </View>
@@ -92,7 +107,62 @@ export default class Hometab extends Component {
               </View>
         </View>
 
-        <Image source={plusIC} style={{width:50,height:50,alignItems:'flex-start',bottom:10}} />
+        <Image source={plusIC} style={plusStyle} />
+        <View style={[popover, this.state.showInfo ? show : hide]}>
+
+          <Image style={[imgUp,imgUpInfo]} source={upDD} />
+            <View style={overLayout}>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={locationDD} />
+                    <Text style={colorTextPP}>Địa điểm: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={onlineDD} />
+                    <Text style={colorTextPP}>Đang online: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={checkDD} />
+                    <Text style={colorTextPP}>Địa điểm mới tham gia: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={likeDD} />
+                    <Text style={colorTextPP}>Like: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={socialDD} />
+                    <Text style={colorTextPP}>Share: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+            </View>
+
+        </View>
+
+        <View style={[popover, this.state.showShare ? show : hide]}>
+
+          <Image style={[imgUp,imgUpShare]} source={upDD} />
+            <View style={overLayout}>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={locationDD} />
+                    <Text style={colorTextPP}>Địa điểm: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={onlineDD} />
+                    <Text style={colorTextPP}>Đang online: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={checkDD} />
+                    <Text style={colorTextPP}>Địa điểm mới tham gia: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={likeDD} />
+                    <Text style={colorTextPP}>Like: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+                <View style={listOver}>
+                    <Image style={[imgInfo,imgMargin]} source={socialDD} />
+                    <Text style={colorTextPP}>Share: <Text style={colorNumPP}>45.8k</Text></Text>
+                </View>
+            </View>
+
+        </View>
 
       </View>
     );
@@ -106,6 +176,7 @@ const styles = StyleSheet.create({
   },
   headStyle : {
       backgroundColor: '#D0021B',paddingTop: Platform.OS==='ios' ? 25 : 10, alignItems: 'center',height: 110,
+      position:'relative',zIndex:5,
   },
   inputSearch : {
     marginTop: 8,width:width-40,backgroundColor:'#fff',borderRadius:5,padding:10,textAlign:'center',
@@ -117,10 +188,10 @@ const styles = StyleSheet.create({
       width: 138,height: 25,
   },
   imgContent : {
-      width: 65,height: 65,marginBottom:10,
+      width: 65,height: 65,marginBottom:10,resizeMode : 'cover',
   },
   labelCat :{
-    marginBottom:40,backgroundColor:'transparent',
+    marginBottom:40,backgroundColor:'transparent',textAlign:'center',width:65,
   },
   wrapIcRight:{
     width:55,justifyContent: 'space-between',flexDirection: 'row',marginTop: 7,
@@ -135,24 +206,26 @@ const styles = StyleSheet.create({
     width:50,borderColor:'transparent',position:'relative',paddingLeft:0,paddingTop:5,
   },
   optionListStyle :{
-    backgroundColor:'#fff',borderColor:'transparent',position:'absolute',width: 55,  height:60,top:48,left:10,
+    backgroundColor:'#fff',borderColor:'transparent',position:'absolute',width: 55,  height:60,
+    top:Platform.OS ==='ios' ? 48 : 35,left:10,
   },
   OptionItem : {
-    paddingTop: 0,paddingBottom: 0,marginTop: 0,marginBottom: 0,
+    paddingTop: 7,paddingBottom: 0,marginTop: 0,marginBottom: 0,
   },
   wrapContent :{
     flexDirection:'row',
     alignItems:'center',
     flex:1,
+    overflow:'hidden',
   },
   leftContent :{
     justifyContent:'space-between',
-    alignItems:'center',
+    alignItems:'flex-end',
     flex:1,
   },
   rightContent :{
     justifyContent:'space-between',
-    alignItems:'center',
+    alignItems:'flex-start',
     flex:1,
   },
   middleContent :{
@@ -160,5 +233,22 @@ const styles = StyleSheet.create({
     alignItems:'center',
     flex:1,
   },
-
+  plusStyle :{width:50,height:50,bottom:10,position:'absolute',right:10},
+  popover : {
+    top: Platform.OS ==='ios' ? 55 :40,
+    alignItems:'center',
+    position:'absolute',
+    width,height:300,
+    zIndex:5,
+  },
+  colorTextPP :{color:'#B8BBC0'},
+  colorNumPP :{fontWeight: 'bold',color:'#2F353F'},
+  imgUp:{width: 14,height: 7,top:1,position:'absolute'},
+  imgUpInfo :{right:58},
+  imgUpShare :{right:20},
+  imgMargin: {margin:10},
+  listOver:{alignItems:'center',flexDirection:'row',padding:10,borderBottomColor:'#EEEDEE', borderBottomWidth:1,},
+  overLayout:{backgroundColor:'#fff',width: width-20,borderRadius:4,overflow:'hidden',top:7},
+  show : { display: 'flex'},
+  hide : { display: 'none'},
 });
