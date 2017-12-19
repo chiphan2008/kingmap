@@ -1,13 +1,16 @@
-/* @flow */
 
-import React, { Component } from 'react';
-import {
-  AsyncStorage
-} from 'react-native';
-
-let auth_key = {grant_type:'client_credentials',client_id:1,client_secret:'NKbqe8ovfMetW8WYimVN7MtNHSsy6tCo6mm7WU9Y'};
-AsyncStorage.setItem('AuthKey', JSON.stringify(auth_key), () => {
-    AsyncStorage.getItem('AuthKey', (err, result) => {
-      global.auth_key_client = result;
-    });
-});
+module.exports = {
+  auth_key:{
+    grant_type:'client_credentials',
+    client_id:1,
+    client_secret:'NKbqe8ovfMetW8WYimVN7MtNHSsy6tCo6mm7WU9Y'
+  },
+  url: 'http://beta.kingmap.vn/api/',
+  secret_key: {
+        token_type: "Bearer",
+        expires_in: 1296000,
+        access_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImM3OWNjYzFmZTdkOWY1OTY2OTBjMmEyMTk2NzgwMmU3YmI1ODk1MTViMzhhNGE4YTI3OTI1ZDg1N2MxN2M1NjQ2ZGI2MDkzM2M5OTc3ZjU5In0.eyJhdWQiOiIxIiwianRpIjoiYzc5Y2NjMWZlN2Q5ZjU5NjY5MGMyYTIxOTY3ODAyZTdiYjU4OTUxNWIzOGE0YThhMjc5MjVkODU3YzE3YzU2NDZkYjYwOTMzYzk5NzdmNTkiLCJpYXQiOjE1MTM2NjIzNDMsIm5iZiI6MTUxMzY2MjM0MywiZXhwIjoxNTE0OTU4MzQzLCJzdWIiOiIiLCJzY29wZXMiOltdfQ.mGJEOtsr4GAfQ1p3gVv8zN0w8ON8o_r0qLeYqbOYa10sNMm-juzfzRPutUy2w7xHeRbdLS06VmyYT_VLJyplrWaDPz-XdWGybbq68P0716d1m4xv9vbk5l9AnD0uT0XIZp_EE6wxUBY0kDhPuDndBxVvmGkS0Hmh_5Mc8guJixqWZERaFKDryQMcpj7qnrdCA5FozUysYrGvIxUx1gxc8xCMqfy5fYCXzs59mDmeWm7GKjmMwOcH0-JDm2LI0IcWhywNxCWLrophhbEF1G-rhjMp2c7jmRo5IPRubTRUF45NhgmX21Lr-xRmu3s_jSLm-utV_rScDBYFHetfMyKl5CV0E81bHxs0MggCplKXL5J8mAfwM5Ry54WtxDkWJyVtht3kGLVmbgegnFsIgAr9fbukvO_zToiSj2Un_rEaT8L7aN_TWqxX1RCYGl3JTCWMavYhjNmKFAtCwtj_P8AY050bgKP-LCx1Mh_j8Bh3LAkfPB0Kn0RRx0441vD0NLrZKAZrLQYieBwCvHqI80IVPji305lVDwcUzMdd8h1LCorXxPBKyj_I0ovK49w_mvALSdfGgS74ggmDp8RPrrW1FAwhBi__7ebfukEOOGax_z5sERF9SHB0y3cOvv8tMIug-tBm5R-n1Sm_2o79fLgP2ep9o5IwOU6I8Hbyi5zmfyo"
+    },
+  country: [],
+  city:[],
+};

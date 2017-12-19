@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput, TouchableOpacity} from 'react-native';
 const {height, width} = Dimensions.get('window');
+import util from 'util';
+
 import bgMap from '../../../src/icon/bg-map.png';
 import logoTop from '../../../src/icon/ic-white/Logo-ngang.png';
 import searchIC from '../../../src/icon/ic-gray/ic-search.png';
@@ -42,7 +44,10 @@ export default class Hometab extends Component {
       valueLang : value
     });
   }
+
   render() {
+    const {navigation} = this.props;
+    console.log("this.props.Hometab=",util.inspect(this.props.navigation,false,null));
     const {
       container, bgImg,
       headStyle, headContent,imgLogoTop,imgSocial, imgInfo,wrapIcRight,
@@ -50,6 +55,7 @@ export default class Hometab extends Component {
       wrapContent,leftContent,rightContent,middleContent,imgContent,labelCat,
       plusStyle,popover,overLayout,listOver,imgMargin,imgUp,imgUpInfo,imgUpShare
     } = styles;
+
     return (
       <View style={container}>
       <Image source={bgMap} style={bgImg} />
@@ -86,9 +92,16 @@ export default class Hometab extends Component {
 
         <View style={wrapContent}>
               <View style={leftContent}>
+                <TouchableOpacity
+                onPress={() => console.log("navigation=",util.inspect(this.props.navigation,false,null))}
+                >
                   <Image style={imgContent} source={hotelOval} />
+                </TouchableOpacity>
                   <Text style={labelCat}>Hotel</Text>
+                  <TouchableOpacity
+                  onPress={() => {navigation.navigate('CatScreen')} } >
                   <Image style={imgContent} source={bankOval} />
+                  </TouchableOpacity>
                   <Text style={labelCat}>Bank</Text>
               </View>
               <View style={middleContent}>
@@ -172,7 +185,7 @@ export default class Hometab extends Component {
 const styles = StyleSheet.create({
   container: {flex: 1},
   bgImg : {
-    width,height,position: 'absolute',justifyContent: 'center',alignItems: 'center',resizeMode : 'cover',
+    width,height,position: 'absolute',justifyContent: 'center',alignItems: 'center',alignSelf: 'stretch',resizeMode: 'stretch',
   },
   headStyle : {
       backgroundColor: '#D0021B',paddingTop: Platform.OS==='ios' ? 25 : 10, alignItems: 'center',height: 110,

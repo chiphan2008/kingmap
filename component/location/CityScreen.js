@@ -1,10 +1,11 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Platform, View, Text, Image, Button, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { Platform, View, Text, Image, Button, StyleSheet, Dimensions, TouchableOpacity,AsyncStorage } from 'react-native';
 import {Select, Option} from "react-native-chooser";
 import util from 'util';
-
+import getApi from '../api/getApi';
+import global from '../global';
 //import image
 import LogoHome from '../../src/icon/ic-home/Logo-home.png';
 import bgMap from '../../src/icon/bg-map.png';
@@ -16,9 +17,15 @@ export default class CountryScreen extends Component {
     super(props);
     this.state = {
       pressStatus: false,
-      valueCountry : "Vietname",
-      valueCity : "Please choose city",
-    }
+      dataCountry: getApi(global.url + 'countries'),
+      //dataCity: getApi(global.url + 'cities/1'),
+      listCountry : [],
+      listCity : [],
+      valueCountry : "Chọn quốc gia",
+      valueCity : "Chọn tỉnh thành phố",
+    };
+
+
   }
 
   onSelectCountry(value, label) {
@@ -31,8 +38,33 @@ export default class CountryScreen extends Component {
       valueCity : value
     });
   }
+  save(){
+    if(this.state.valueCountry !=='Chọn quốc gia' && this.state.valueCity !=='Chọn tỉnh thành phố'){
+      AsyncStorage.setItem('@CountryLocationKey:key', JSON.stringify({name:this.state.valueCountry}));
+      AsyncStorage.setItem('@CityLocationKey:key', JSON.stringify({name:this.state.valueCity}));
+      console.log('this.state.valueCountry',this.state.valueCountry)
+      this.props.navigation.navigate('MainScr');
+    }
+
+  }
+  componentWillMount() {
+      // const idType = this.props.category.id;
+      getApi(global.url+'countries')
+      .then(arrCountry => {
+        //console.log('arrCountry',arrCountry.data);
+          this.setState({ listCountry: this.state.listCountry = arrCountry.data });
+          for (let cityObject of arrCountry.data) {
+            getApi(global.url+'cities/'+ cityObject.id)
+            .then(arrCity => {
+              this.setState({ listCity: this.state.listCity = arrCity.data });
+            });
+          }
+      })
+      .catch(err => console.log(err));
+  }
+
   render() {
-    const {navigation} = this.props;
+
     //console.log("this.props.CityScreen=",util.inspect(this.props.navigation,false,null));
     const {
       container, imgLogo, title, wrapper,bgImg,
@@ -40,6 +72,7 @@ export default class CountryScreen extends Component {
       optionListStyle, optionListStyleCountry, optionListStyleCity,
       btn, btnPress, colorPress, colorNext, btnWrap, contentWrap,
     } = styles;
+
     return (
 
       <View style={container}>
@@ -60,9 +93,9 @@ export default class CountryScreen extends Component {
                     indicator="down"
                     indicatorSize={7}
                   >
-
-                  <Option style={OptionItem} value = "vietnam">Vietnam</Option>
-
+                  {this.state.listCountry.map((e)=>(
+                    <Option value={e.name} key={e.id}>{e.name}</Option>
+                  ))}
               </Select>
 
               <Select
@@ -76,21 +109,17 @@ export default class CountryScreen extends Component {
                     indicator="down"
                     indicatorSize={7}
                   >
-                  <Option style={OptionItem} value = "johnceena">Johnceena</Option>
-                  <Option style={OptionItem} value = "undertaker">Undertaker</Option>
-                  <Option style={OptionItem} value = "Daniel">Daniel</Option>
-                  <Option style={OptionItem} value = "Roman">Roman</Option>
-                  <Option style={OptionItem} value = "Stonecold">Stonecold</Option>
-                  <Option style={OptionItem} value = "Rock">Rock</Option>
-                  <Option style={OptionItem} value = "Sheild">Sheild</Option>
-                  <Option style={OptionItem} value = "Orton">Orton</Option>
+                  {this.state.listCity.map((e)=>(
+                    <Option value={e.name} key={e.id}>{e.name}</Option>
+                  ))}
+
               </Select>
         </View>
         <View style={btnWrap}>
 
         <TouchableOpacity
             style={this.state.pressStatus ? btnPress : btn }
-            onPress={() => {navigation.navigate('MainScr')}}
+            onPress={this.save.bind(this)}
 
           >
             <Text style={ colorNext }>Next</Text>
