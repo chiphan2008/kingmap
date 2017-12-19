@@ -44,10 +44,12 @@ export default class Hometab extends Component {
       valueLang : value
     });
   }
-
+  goToCat(){
+    this.props.navigation.navigate('CatScr');
+  }
   render() {
-    const {navigation} = this.props;
-    console.log("this.props.Hometab=",util.inspect(this.props.navigation,false,null));
+    const {navigate} = this.props.navigation;
+    //console.log("this.props.Hometab=",util.inspect(this.props.navigation,false,null));
     const {
       container, bgImg,
       headStyle, headContent,imgLogoTop,imgSocial, imgInfo,wrapIcRight,
@@ -93,13 +95,13 @@ export default class Hometab extends Component {
         <View style={wrapContent}>
               <View style={leftContent}>
                 <TouchableOpacity
-                onPress={() => console.log("navigation=",util.inspect(this.props.navigation,false,null))}
+                onPress={() => console.log("navigation=",util.inspect(this.props.navigation.navigate,false,null))}
                 >
                   <Image style={imgContent} source={hotelOval} />
                 </TouchableOpacity>
                   <Text style={labelCat}>Hotel</Text>
                   <TouchableOpacity
-                  onPress={() => {navigation.navigate('CatScreen')} } >
+                  onPress={() => navigate('CatScr') } >
                   <Image style={imgContent} source={bankOval} />
                   </TouchableOpacity>
                   <Text style={labelCat}>Bank</Text>

@@ -2,8 +2,11 @@
 
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, } from 'react-native';
-import { TabNavigator } from 'react-navigation';
+import { TabNavigator,StackNavigator } from 'react-navigation';
+import util from 'util';
 //import tab component
+import CategoryScreen from './home/CategoryScreen';
+
 import HomeTab from './home/HomeTab';
 import LocationTab from './location/LocationTab';
 import NotifyTab from './notify/NotifyTab';
@@ -57,6 +60,7 @@ const RootTabs = TabNavigator({
   },
 
 }, {
+  //initialRouteName:'LocationT',
   tabBarPosition: 'bottom',
   tabBarSelected: 'Home',
   tabBarOptions: {
@@ -75,12 +79,13 @@ const RootTabs = TabNavigator({
   },
 });
 
-
 export default class MainScreen extends Component {
+
   render() {
+    //console.log("MainScr=",util.inspect(this.props.nav,false,null))
     return (
       <View style={styles.container}>
-        <RootTabs />
+        <RootTabs  />
       </View>
     );
   }
