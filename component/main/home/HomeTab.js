@@ -49,7 +49,7 @@ export default class Hometab extends Component {
   }
   render() {
     const {navigate} = this.props.navigation;
-    //console.log("this.props.Hometab=",util.inspect(this.props.navigation,false,null));
+    //console.log("this.props.Hometab=",util.inspect(this.props.navigation.state.routeName,false,null));
     const {
       container, bgImg,
       headStyle, headContent,imgLogoTop,imgSocial, imgInfo,wrapIcRight,
@@ -121,8 +121,9 @@ export default class Hometab extends Component {
                   <Text style={labelCat}>Shop</Text>
               </View>
         </View>
-
-        <Image source={plusIC} style={plusStyle} />
+        <TouchableOpacity>
+            <Image source={plusIC} style={plusStyle} />
+        </TouchableOpacity>
         <View style={[popover, this.state.showInfo ? show : hide]}>
 
           <Image style={[imgUp,imgUpInfo]} source={upDD} />

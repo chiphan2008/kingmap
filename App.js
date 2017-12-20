@@ -115,26 +115,78 @@ const RootTabs = TabNavigator({
   },
 });
 
+const CatTabs = TabNavigator({
+  HomeT: {
+    screen: CategoryScreen,
+    navigationOptions: {
+      tabBarLabel: 'Home',
+      tabBarIcon: ({ tintColor }) => (
+        <Image source={homeIC} style={[styles.icon, {tintColor}]} />
+      ),
+      
+    },
+  },
+
+  LocationT: {
+    screen: LocationTab,
+    navigationOptions: {
+      tabBarLabel: 'Location',
+      tabBarIcon: ({ tintColor }) => (
+        <Image source={locationIC} style={[styles.icon, {tintColor}]} />
+      ),
+    },
+  },
+  NotifyT: {
+    screen: NotifyTab,
+    navigationOptions: {
+      tabBarLabel: 'Notification',
+      tabBarIcon: ({ tintColor }) => (
+        <Image source={notifyIC} style={[styles.icon, {tintColor}]} />
+      ),
+    },
+  },
+  PersonalT: {
+    screen: PersonalTab,
+    navigationOptions: {
+      tabBarLabel: 'Personal',
+      tabBarIcon: ({ tintColor }) => (
+        <Image source={personalIC} style={[styles.icon, {tintColor}]} />
+      ),
+      style : {
+        borderBottomWidth:0,
+      },
+    },
+  },
+
+}, {
+  //initialRouteName:'LocationT',
+  tabBarPosition: 'bottom',
+  tabBarSelected: 'Home',
+  tabBarOptions: {
+    showLabel:true,
+    showIcon:true,
+    activeTintColor: '#D0021B',
+    inactiveTintColor: '#777E8A',
+    activeBackgroundColor:'#FFFEFF',
+    borderBottomWidth: 0,
+    style : {
+        backgroundColor:'#FFFEFF',
+    },
+    indicatorStyle: {
+        backgroundColor: 'transparent',
+    },
+  },
+});
+
   const App = StackNavigator({
     IntroSrc: {
       screen: FadeView,
     },
     MainScr: {
       screen: RootTabs,
-      navigationOptions: {
-      //headerMode:'none',
-        //abBarVisible:true,
-        //headerTitle: '<Header />',
-        //header: <Header  />,
-        //headerStyle: styles.header,
-        //headerTitleStyle: styles.colorhead,
-      },
     },
     CatScr: {
-      screen: CategoryScreen,
-      // navigationOptions: {
-      //   tabBarVisible:true,
-      // },
+      screen: CatTabs,
     },
 
   },

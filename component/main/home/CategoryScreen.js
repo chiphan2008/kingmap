@@ -11,6 +11,7 @@ import sortDown from '../../../src/icon/ic-white/sort-down.png';
 import arrowLeft from '../../../src/icon/ic-white/arrow-left.png';
 import listIC from '../../../src/icon/ic-white/ic-list.png';
 import logoMap from '../../../src/icon/Logo-map.png';
+import plusIC from '../../../src/icon/ic-home/ic-plus.png';
 
 export default class CategoryScreen extends Component {
   constructor(props) {
@@ -38,20 +39,20 @@ export default class CategoryScreen extends Component {
 
   render() {
     const {navigation} = this.props;
-    //console.log("this.props.Hometab=",util.inspect(this.props.navigation,false,null));
+    //console.log("this.props.CategoryScreen=",util.inspect(this.props.navigation.state.routeName,false,null));
     const {
       container,
-      headCatStyle, headContent,wrapIcRight,
-      popover,show,hide,overLayout,colorTextPP,listOver,
+      headCatStyle, headContent,wrapIcRight,plusStyle,
+      popover,show,hide,overLayoutCat,colorText,listCatOver,
       wrapContent,leftContent,rightContent,middleContent,imgContent,labelCat,
-
+      imgFlatItem,catInfoOver,txtTitleOver,txtAddrOver,wrapInfoOver,
     } = styles;
     //onRegionChange={this.onRegionChange}
     return (
       <View style={container}>
         <View style={headCatStyle}>
             <View style={headContent}>
-                <TouchableOpacity onPress={()=> this.props.navigation.goBack()}>
+                <TouchableOpacity onPress={()=> this.props.navigation.navigate('MainScr')}>
                 <Image source={arrowLeft} style={{width:16, height:16,marginTop:5}} />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -67,24 +68,11 @@ export default class CategoryScreen extends Component {
 
         <View style={[popover, this.state.showCat ? show : hide]}>
 
-            <View style={overLayout}>
-                <View style={listOver}>
-
-                    <Text style={colorTextPP}>Địa điểm</Text>
-                </View>
-                <View style={listOver}>
-
-                    <Text style={colorTextPP}>Địa điểm</Text>
-                </View>
-                <View style={listOver}>
-
-                    <Text style={colorTextPP}>Địa điểm</Text>
-                </View>
-                <View style={listOver}>
-
-                    <Text style={colorTextPP}>Địa điểm</Text>
-                </View>
-
+            <View style={overLayoutCat}>
+                <TouchableOpacity  style={listCatOver}>
+                    <Text style={colorText}>Địa điểm</Text>
+                </TouchableOpacity>
+                
             </View>
 
         </View>
@@ -105,7 +93,19 @@ export default class CategoryScreen extends Component {
             />
           ))}
           </MapView>
+            <Image source={plusIC} style={plusStyle} />
+            <View style={catInfoOver}>
+                <TouchableOpacity>
+                    <Image style={imgFlatItem} source={{uri:'http://diadiem.kingmap.vn/upload/img_content_thumbnail/1506316541_avatar_yXvdIt6ql7nkD.jpeg'}} />
+                  </TouchableOpacity>
+                <View style={wrapInfoOver}>
+                    <TouchableOpacity>
+                        <Text style={txtTitleOver}>Pane e Vino - Ẩm Thực Ý - Nguyễn Khắc Cần</Text>
+                    </TouchableOpacity>
+                        <Text style={txtAddrOver}>3 Nguyễn Khắc Cần, Quận Hoàn Kiếm, Hà Nội, Việt Nam</Text>
 
+                </View>
+            </View>
       </View>
     );
   }
