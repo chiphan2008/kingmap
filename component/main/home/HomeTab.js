@@ -196,7 +196,9 @@ export default class HomeTab extends Component {
               })
             }
 
-              <TouchableOpacity  style={[wrapCircle,logoCenter]}>
+              <TouchableOpacity
+              onPress={()=>navigate('OtherCatScr')}
+              style={[wrapCircle,logoCenter]}>
               <Image style={imgContent} source={logoHome} />
               <Text style={labelCat}>{this.state.other}</Text>
               </TouchableOpacity>

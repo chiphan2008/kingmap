@@ -19,19 +19,20 @@ export default class CategoryScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      mapRegion: null,
+      lastLat: null,
+      lastLong: null,
+
       curLocation:{
         latitude:10.7808,
         longitude: 106.6783,
+        latitudeDelta:  0.000422,
+        longitudeDelta: 0.000121,
         latlng: '10.7808,106.6783',
       },
+
       showCat : false,
       showInfoOver : true,
-      region: {
-          latitude: 10.780843591000904,
-          longitude: 106.67830749999996,
-          latitudeDelta: 0.0062,
-          longitudeDelta: 0.0021,
-        },
       markers:[{
         id : 1,
         latlng: {latitude: 10.780843591000904,longitude: 106.67830749999996,},
@@ -42,8 +43,40 @@ export default class CategoryScreen extends Component {
     }
 
   }
-  onRegionChange(region) {
-    this.setState({ region });
+  componentWillMount() {
+    this.watchID = navigator.geolocation.watchPosition((position) => {
+      // Create the object to update this.state.mapRegion through the onRegionChange function
+      let region = {
+        latitude:       position.coords.latitude,
+        longitude:      position.coords.longitude,
+        latitudeDelta:  0.00422,
+        longitudeDelta: 0.00121,
+        latlng: "'"+position.coords.latitude+','+position.coords.longitude+"'",
+      }
+      console.log('latlng',position.coords.latitude,'latlng',position.coords.longitude,)
+      //curLocation
+      this.getCategory(this.props.navigation.state.params.idCat,this.state.curLocation.latlng);
+      //this.getCategory(this.props.navigation.state.params.idCat,region.latlng);
+      //this.onRegionChange(region, region.latitude, region.longitude);
+    });
+  }
+
+  onRegionChange(region, lastLat, lastLong) {
+    this.setState({
+      mapRegion: region,
+      lastLat: lastLat || this.state.lastLat,
+      lastLong: lastLong || this.state.lastLong
+    });
+  }
+  onMapPress(e) {
+    //console.log(e.nativeEvent.coordinate.longitude);
+    let region = {
+      latitude:       e.nativeEvent.coordinate.latitude,
+      longitude:      e.nativeEvent.coordinate.longitude,
+      latitudeDelta:  0.00422,
+      longitudeDelta: 0.00121
+    }
+    this.onRegionChange(region, region.latitude, region.longitude);
   }
   getCategory(idcat,loc){
     getApi(global.url+'content-by-category?category='+idcat+'&location='+loc)
@@ -53,8 +86,11 @@ export default class CategoryScreen extends Component {
     })
     .catch(err => console.log(err));
   }
-  componentWillMount(){
-    this.getCategory(this.props.navigation.state.params.idCat,this.state.curLocation.latlng);
+  // componentWillMount(){
+  //
+  // }
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
   }
   render() {
     //console.log('this.state.markers[0].lat',this.state.markers)
@@ -102,8 +138,9 @@ export default class CategoryScreen extends Component {
 
         <MapView
             style={{flex:1}}
-            region={this.state.region}
+            region={this.state.mapRegion}
             onRegionChange={this.onRegionChange.bind(this)}
+            onPress={this.onMapPress.bind(this)}
           >
           {this.state.markers.map(marker => {(
             <MapView.Marker
