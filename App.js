@@ -3,10 +3,11 @@ import React, { Component } from 'react';
 import {
   Platform, StyleSheet, View, AsyncStorage, Image
 } from 'react-native';
-import { StackNavigator,TabNavigator } from 'react-navigation';
+import { StackNavigator,TabNavigator, } from 'react-navigation';
 //import util from 'util';
 import HomeTab from './component/main/home/HomeTab';
 import LocationTab from './component/main/location/LocationTab';
+import DistributeTab from './component/main/location/DistributeTab';
 import NotifyTab from './component/main/notify/NotifyTab';
 import PersonalTab from './component/main/personal/PersonalTab';
 //import icon tabBarIcon
@@ -65,7 +66,7 @@ const RootTabs = TabNavigator({
   },
 
   LocationT: {
-    screen: LocationTab,
+    screen: DistributeTab,//LocationTab,//,DistributeTab
     navigationOptions: {
       tabBarLabel: 'Location',
       tabBarIcon: ({ tintColor }) => (
@@ -123,7 +124,7 @@ const CatTabs = TabNavigator({
       tabBarIcon: ({ tintColor }) => (
         <Image source={homeIC} style={[styles.icon, {tintColor}]} />
       ),
-      
+
     },
   },
 

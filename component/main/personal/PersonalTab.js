@@ -50,7 +50,7 @@ export default class Hometab extends Component {
   }
   render() {
     const {navigation} = this.props;
-    console.log("this.props.Hometab=",util.inspect(this.props.navigation,false,null));
+    //console.log("this.props.Hometab=",util.inspect(this.props.navigation,false,null));
     const {
       container, bgImg,
       headStyle, imgLogoTop,imgSocial, imgInfo,wrapIcRight,

@@ -17,8 +17,6 @@ export default class CountryScreen extends Component {
     super(props);
     this.state = {
       pressStatus: false,
-      dataCountry: getApi(global.url + 'countries'),
-      //dataCity: getApi(global.url + 'cities/1'),
       listCountry : [],
       listCity : [],
       valueCountry : "Chọn quốc gia",

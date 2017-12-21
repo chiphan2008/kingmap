@@ -17,6 +17,12 @@ module.exports = {
       backgroundColor: '#D0021B',paddingTop: Platform.OS==='ios' ? 30 : 20, alignItems: 'center',height: 65,
       position:'relative',zIndex:5,
   },
+  wrapDistribute:{
+    width:width-20,borderRadius:5,backgroundColor:'#fff',minHeight:height,
+    shadowOffset:{  width: 1,  height: 1,  },
+    shadowColor: '#999',
+    shadowOpacity: .5,
+  },
   wrapFilter:{alignItems:'center',marginTop:15,marginBottom:15,},
   filterFrame:{width:width-40,justifyContent:'space-between',alignItems:'center',flexDirection:'row'},
   inputSearch : {
@@ -38,7 +44,7 @@ module.exports = {
   },
   wrapListLoc:{
     backgroundColor:'#fff',
-    shadowOffset:{  top: 1,  right: 1,  },
+    shadowOffset:{  width: 1,  height: 1,  },
     shadowColor: '#ddd',
     shadowOpacity: .5,
     minHeight: height-50,
@@ -48,8 +54,26 @@ module.exports = {
     flexDirection:'row',
     paddingBottom:20,
   },
+  flatItem:{
+    alignItems:'center',
+    borderBottomWidth:1,
+    borderBottomColor:'#E3E4E8',
+    borderRightWidth:1,
+    borderRightColor:'#E3E4E8',
+    width:(width-24)/3,
+    padding:10,
+    paddingTop:20,
+  },
+  flatlistItem:{
+    justifyContent:'space-between',
+    flexDirection:'row',
+  },
   imgFlatItem:{
     marginRight:10,
+    width:90,height:90,
+  },
+  imgFlatItemLoc:{
+
     width:90,height:90,
   },
   wrapFlatRight:{
@@ -62,10 +86,37 @@ module.exports = {
       width: 138,height: 25,
   },
   imgContent : {
-      width: 65,height: 65,marginBottom:10,resizeMode : 'cover',
+      width: 65,height: 65,marginBottom:10,
+  },
+  square:{
+    width:300,
+    height:300,
+    alignItems:'center',
+    justifyContent:'center',
+  },
+  wrapCircle:{
+    position:'absolute',
+    flex:1,
+    alignItems:'center',
+
+  },
+  circle1:{top:-5,left :120,},
+  circle2:{top:44,left:222,},
+  circle3:{top:154,left :247,},
+  circle4:{top:242,left :176,},
+  circle5:{top:242,left :64,},
+  circle6:{top:154,left :-7,},
+  circle7:{top:44,left :22,},
+  logoCenter:{top:120},
+
+  wrapContent :{
+    //flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'center',
+    flex:1,
   },
   labelCat :{
-    marginBottom:40,backgroundColor:'transparent',textAlign:'center',width:65,
+    backgroundColor:'transparent',textAlign:'center',
   },
   wrapIcRight:{
     width:55,justifyContent: 'space-between',flexDirection: 'row',marginTop: 7,
@@ -86,28 +137,15 @@ module.exports = {
   OptionItem : {
     paddingTop: 7,paddingBottom: 0,marginTop: 0,marginBottom: 0,
   },
-  wrapContent :{
-    flexDirection:'row',
-    alignItems:'center',
-    flex:1,
-    overflow:'hidden',
+  plusStyle :{bottom:10,position:'absolute',right:10,
   },
-  leftContent :{
-    justifyContent:'space-between',
-    alignItems:'flex-end',
-    flex:1,
+  imgPlusStyle:{
+    shadowOffset:{  width: 1,  height: 1,  },
+    shadowColor: '#999',
+    shadowOpacity: .2,
+    width:50,height:50,
+
   },
-  rightContent :{
-    justifyContent:'space-between',
-    alignItems:'flex-start',
-    flex:1,
-  },
-  middleContent :{
-    justifyContent:'space-between',
-    alignItems:'center',
-    flex:1,
-  },
-  plusStyle :{width:50,height:50,bottom:10,position:'absolute',right:10},
   popover : {
     top: Platform.OS ==='ios' ? 55 :40,
     alignItems:'center',
@@ -137,7 +175,7 @@ module.exports = {
   },
   catInfoOver:{padding:15,bottom:0,zIndex:6,backgroundColor:'#fff',width,flexDirection:'row'},
   wrapInfoOver:{flex:1,flexWrap: 'wrap',},
-  txtTitleOver:{color:'#2F353F',fontSize:20,marginBottom:10,height:50,overflow:'hidden'},
+  txtTitleOver:{color:'#2F353F',fontSize:20,marginBottom:10,maxHeight:50,overflow:'hidden'},
   txtAddrOver:{color:'#6587A8',fontSize:14,height:40,},
   show : { display: 'flex'},
   hide : { display: 'none'},
