@@ -1,12 +1,16 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput, TouchableOpacity} from 'react-native';
+import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput,
+  TouchableOpacity,PermissionsAndroid, AsyncStorage } from 'react-native';
 const {height, width} = Dimensions.get('window');
-import SvgUri from 'react-native-svg-uri';
+//import SvgUri from 'react-native-svg-uri';
+//import NumberFormat from 'react-number-format';
 
 import util from 'util';
 import getApi from '../../api/getApi';
+import getLanguage from '../../api/getLanguage';
+//import requestLocationPermission from '../../api/accessLocation';
 import global from '../../global';
 import styles from '../../styles.js';
 
@@ -23,45 +27,91 @@ import onlineDD from '../../../src/icon/ic-gray/ic-online.png';
 import checkDD from '../../../src/icon/ic-gray/ic-check-gray.png';
 import likeDD from '../../../src/icon/ic-gray/ic-like.png';
 import socialDD from '../../../src/icon/ic-gray/ic-social.png';
-
-
 import plusIC from '../../../src/icon/ic-home/ic-plus.png';
-import hotelOval from '../../../src/icon/ic-home/Oval-hotel.png';
-import bankOval from '../../../src/icon/ic-home/Oval-bank.png';
-import foodOval from '../../../src/icon/ic-home/Oval-food.png';
+import facebookIC from '../../../src/icon/ic-home/ic-facebook.png';
+import googleIC from '../../../src/icon/ic-home/ic-google.png';
+import twitterIC from '../../../src/icon/ic-home/ic-twitter.png';
+
 import logoHome from '../../../src/icon/ic-home/Logo-home.png';
-import entertainmentOval from '../../../src/icon/ic-home/Oval-entertainment.png';
-import coffeeOval from '../../../src/icon/ic-home/Oval-coffee.png';
-import shopOval from '../../../src/icon/ic-home/Oval-shop.png';
+//import hotelOval from '../../../src/icon/ic-home/Oval-hotel.png';
+//import bankOval from '../../../src/icon/ic-home/Oval-bank.png';
+//import foodOval from '../../../src/icon/ic-home/Oval-food.png';
+//import entertainmentOval from '../../../src/icon/ic-home/Oval-entertainment.png';
+//import coffeeOval from '../../../src/icon/ic-home/Oval-coffee.png';
+//import fashionOval from '../../../src/icon/ic-home/Oval-fashion.png';
+//import shopOval from '../../../src/icon/ic-home/Oval-shop.png';
+//import beautifulOval from '../../../src/icon/ic-home/Oval-beautiful.png';
+//import zooOval from '../../../src/icon/ic-home/Oval-zoo.png';
+//import oilOval from '../../../src/icon/ic-home/Oval-oil.png';
+//import lifenightOval from '../../../src/icon/ic-home/Oval-lifenight.png';
+//import hospitalOval from '../../../src/icon/ic-home/Oval-hospital.png';
 
 import {Select, Option} from "react-native-chooser";
 
 export default class HomeTab extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      listCategory : [],
+    staticLang_vn = {
       other:'Khác',
+      location:'Địa điểm',
+      online:'Trực tuyến',
+      new_location:'Địa điểm mới',
+      like : 'Thích',
+      share : 'Chia sẽ',
+    }
+    staticLang_en = {
+      other:'Other',
+      location:'Location',
+      online:'Online',
+      new_location:'New location',
+      like : 'Like',
+      share : 'Share',
+    };
+
+    this.state = {
+      //permission: PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      listCategory : [],
+      listStatus : [],
+      lang : staticLang_vn,
       selectLang: {
         valueLang : "vn",
         labelLang : "VIE",
       },
       showInfo : false,
       showShare : false,
+      latitude: null,
+      longitude: null,
+      error: null,
+
     };
+    getLanguage().then((e) =>{
+      if(e!==null){
+    this.setState({
+      selectLang:{
+        valueLang:e.valueLang,
+        labelLang:e.labelLang,
+      }
+    });
+    e.valueLang==='vn' ?  this.setState({lang : staticLang_vn}) : this.setState({lang : staticLang_en});
+   }
+  });
     arrLang = [{name:'VIE',v:'vn'},{name:'ENG',v:'en'}];
   }
+
   onSelectLang(value, label) {
     //console.log('value',value)
+    //this.lang= this.staticLang_`${value}`;
+    AsyncStorage.setItem('@MyLanguage:key',JSON.stringify({valueLang:value,labelLang :label}))
+    value==='vn' ?  this.setState({lang : staticLang_vn}) : this.setState({lang : staticLang_en});
     this.getCategory(value)
     this.setState({
       selectLang: {
         valueLang : value,
         labelLang : label,
       },
-      other: value==='vn' ? 'Khác' : 'Other',
+      showShare:false,
+      showInfo:false,
     });
-
   }
   getCategory(lang){
     getApi(global.url+'categories?language='+lang)
@@ -70,8 +120,31 @@ export default class HomeTab extends Component {
     })
     .catch(err => console.log(err));
   }
+  getListStatus(){
+    getApi(global.url+'get-static')
+    .then(arrData => {
+        this.setState({ listStatus: arrData.data });
+    })
+    .catch(err => console.log(err));
+  }
   componentWillMount() {
+      this.getListStatus();
       this.getCategory(this.state.selectLang.valueLang);
+
+  }
+
+  componentDidMount() {
+    //console.log("componentDidMount=",util.inspect(PermissionsAndroid.request,false,null));
+    //this._requestPermission();
+    navigator.geolocation.getCurrentPosition(
+          (position) => {
+            //console.log(position);
+           },
+           (error) => {
+            //console.log(error)
+          },
+          {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
+    );
   }
 
   render() {
@@ -79,10 +152,10 @@ export default class HomeTab extends Component {
     //console.log("this.props.Hometab=",util.inspect(this.state.listCategory,false,null));
     const {
       container, bgImg,
-      headStyle, headContent,imgLogoTop,imgSocial, imgInfo,wrapIcRight,
+      headStyle, headContent,imgLogoTop,imgSocial, imgWidthGoogle, imgInfo,imgShare,wrapIcRight,FlatList,
       selectBox,optionListStyle,OptionItem,inputSearch,show,hide,colorTextPP,colorNumPP,
       wrapContent,imgContent,square,wrapCircle,logoCenter,circle1,circle2,circle3,circle4,circle5,circle6,circle7,circle8,labelCat,
-      plusStyle,imgPlusStyle,popover,overLayout,listOver,imgMargin,imgUp,imgUpInfo,imgUpShare
+      plusStyle,imgPlusStyle,popover,overLayout,listOver,popoverShare,overLayoutShare,listOverShare,imgMargin,imgUp,imgUpInfo,imgUpShare
     } = styles;
 
     return (
@@ -104,9 +177,10 @@ export default class HomeTab extends Component {
                 {arrLang.map((e,i)=>(
                     <Option style={OptionItem} key={i} value ={e.v}>{e.name}</Option>
                 ))}
-
             </Select>
-            <Image source={logoTop} style={imgLogoTop} />
+            <TouchableOpacity onPress={()=> this.setState({showInfo:false,showShare:false}) } >
+                <Image source={logoTop} style={imgLogoTop} />
+            </TouchableOpacity>
                 <View style={wrapIcRight}>
                   <TouchableOpacity onPress={()=> this.setState({showInfo:!this.state.showInfo,showShare:false}) } >
                     <Image source={infoIC} style={imgInfo} />
@@ -126,68 +200,69 @@ export default class HomeTab extends Component {
 
             {
               this.state.listCategory.map((e)=>{
+                //console.log(e.sub_category)
                 switch (e.alias) {
                   case 'do-an':
                       return (<TouchableOpacity
                           key={e.id}
                           style={[wrapCircle,circle1]}
-                          onPress={() => navigate('CatScr',{idCat:e.id,idCat:e.id,name:e.name,sub_cat:e.sub_category, }) }
+                          onPress={() => navigate('CatScr',{idCat:e.id,name_cat:e.name,sub_cat:e.sub_category, }) }
                           >
-                        <Image style={imgContent} source={foodOval} />
+                        <Image style={imgContent} source={{uri:`${global.url_media}${e.image}`}} />
                         <Text style={labelCat}  >{e.name}</Text>
                       </TouchableOpacity>)
                   case 'thuc-uong':
                       return (<TouchableOpacity
                           key={e.id}
                           style={[wrapCircle,circle2]}
-                          onPress={() => navigate('CatScr',{idCat:e.id,name:e.name,sub_cat:e.sub_category}) }
+                          onPress={() => navigate('CatScr',{idCat:e.id,name_cat:e.name,sub_cat:e.sub_category}) }
                           >
-                        <Image style={imgContent} source={coffeeOval} />
+                        <Image style={imgContent} source={{uri:`${global.url_media}${e.image}`}} />
                         <Text style={labelCat}  >{e.name}</Text>
                       </TouchableOpacity>);
                   case 'thoi-trang':
                       return (<TouchableOpacity
                           key={e.id}
                           style={[wrapCircle,circle3]}
-                          onPress={() => navigate('CatScr',{idCat:e.id,name:e.name,sub_cat:e.sub_category}) }
+                          onPress={() => navigate('CatScr',{idCat:e.id,name_cat:e.name,sub_cat:e.sub_category}) }
                           >
-                        <Image style={imgContent} source={coffeeOval} />
+                        <Image style={imgContent} source={{uri:`${global.url_media}${e.image}`}} />
                         <Text style={labelCat}  >{e.name}</Text>
                       </TouchableOpacity>);
                   case 'ngan-hang':
                       return (<TouchableOpacity
                           key={e.id}
                           style={[wrapCircle,circle4]}
-                          onPress={() => navigate('CatScr',{idCat:e.id,name:e.name,sub_cat:e.sub_category}) }
+                          onPress={() => navigate('CatScr',{idCat:e.id,name_cat:e.name,sub_cat:e.sub_category}) }
                           >
-                        <Image style={imgContent} source={bankOval} />
+                        <Image style={imgContent} source={{uri:`${global.url_media}${e.image}`}} />
                         <Text style={labelCat}  >{e.name}</Text>
                       </TouchableOpacity>);
                   case 'giai-tri':
                       return (<TouchableOpacity
                           key={e.id}
                           style={[wrapCircle,circle5]}
-                          onPress={() => navigate('CatScr',{idCat:e.id,name:e.name,sub_cat:e.sub_category}) }
+                          onPress={() => navigate('CatScr',{idCat:e.id,name_cat:e.name,sub_cat:e.sub_category}) }
                           >
-                        <Image style={imgContent} source={entertainmentOval} />
+                        <Image style={imgContent} source={{uri:`${global.url_media}${e.image}`}} />
                         <Text style={labelCat}  >{e.name}</Text>
                       </TouchableOpacity>);
                   case 'khach-san':
                       return (<TouchableOpacity
                           key={e.id}
                           style={[wrapCircle,circle6]}
-                          onPress={() => navigate('CatScr',{idCat:e.id,name:e.name,sub_cat:e.sub_category}) }
+                          onPress={() => navigate('CatScr',{idCat:e.id,name_cat:e.name,sub_cat:e.sub_category}) }
                           >
-                        <Image style={imgContent} source={hotelOval} />
+                        <Image style={imgContent} source={{uri:`${global.url_media}${e.image}`}} />
                         <Text style={labelCat}  >{e.name}</Text>
                       </TouchableOpacity>);
                 case 'mua-sam':
                     return (<TouchableOpacity
                         key={e.id}
                         style={[wrapCircle,circle7]}
-                        onPress={() => navigate('CatScr',{idCat:e.id,name:e.name,sub_cat:e.sub_category}) }
+                        onPress={() => navigate('CatScr',{idCat:e.id,name_cat:e.name,sub_cat:e.sub_category}) }
                         >
-                      <Image style={imgContent} source={shopOval} />
+                      <Image style={imgContent} source={{uri:`${global.url_media}${e.image}`}} />
                       <Text style={labelCat}  >{e.name}</Text>
                     </TouchableOpacity>);
                   //default:
@@ -200,7 +275,7 @@ export default class HomeTab extends Component {
               onPress={()=>navigate('OtherCatScr')}
               style={[wrapCircle,logoCenter]}>
               <Image style={imgContent} source={logoHome} />
-              <Text style={labelCat}>{this.state.other}</Text>
+              <Text style={labelCat}>{this.state.lang.other}</Text>
               </TouchableOpacity>
 
             </View>
@@ -211,57 +286,47 @@ export default class HomeTab extends Component {
         <View style={[popover, this.state.showInfo ? show : hide]}>
 
           <Image style={[imgUp,imgUpInfo]} source={upDD} />
-            <View style={overLayout}>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={locationDD} />
-                    <Text style={colorTextPP}>Địa điểm: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={onlineDD} />
-                    <Text style={colorTextPP}>Đang online: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={checkDD} />
-                    <Text style={colorTextPP}>Địa điểm mới tham gia: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={likeDD} />
-                    <Text style={colorTextPP}>Like: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={socialDD} />
-                    <Text style={colorTextPP}>Share: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
-            </View>
 
+          <View style={overLayout}>
+          <View style={listOver}>
+              <Image style={[imgInfo,imgMargin]} source={locationDD} />
+              <Text style={colorTextPP}>{this.state.lang.location}: <Text style={colorNumPP}>{this.state.listStatus.countContent}k</Text></Text>
+          </View>
+          <View style={listOver}>
+              <Image style={[imgInfo,imgMargin]} source={onlineDD} />
+              <Text style={colorTextPP}>{this.state.lang.online}: <Text style={colorNumPP}>{this.state.listStatus.countOnline}</Text></Text>
+          </View>
+          <View style={listOver}>
+              <Image style={[imgInfo,imgMargin]} source={checkDD} />
+              <Text style={colorTextPP}>{this.state.lang.new_location}: <Text style={colorNumPP}>{this.state.listStatus.newContent}k</Text></Text>
+          </View>
+          <View style={listOver}>
+              <Image style={[imgInfo,imgMargin]} source={likeDD} />
+              <Text style={colorTextPP}>{this.state.lang.like}: <Text style={colorNumPP}>{this.state.listStatus.countLike}k</Text></Text>
+          </View>
+          <View style={listOver}>
+              <Image style={[imgInfo,imgMargin]} source={socialDD} />
+              <Text style={colorTextPP}>{this.state.lang.share}: <Text style={colorNumPP}>{this.state.listStatus.countShare}k</Text></Text>
+          </View>
+          </View>
         </View>
 
-        <View style={[popover, this.state.showShare ? show : hide]}>
-
+        <View style={[popoverShare, this.state.showShare ? show : hide]}>
           <Image style={[imgUp,imgUpShare]} source={upDD} />
-            <View style={overLayout}>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={locationDD} />
-                    <Text style={colorTextPP}>Địa điểm: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={onlineDD} />
-                    <Text style={colorTextPP}>Đang online: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={checkDD} />
-                    <Text style={colorTextPP}>Địa điểm mới tham gia: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={likeDD} />
-                    <Text style={colorTextPP}>Like: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
-                <View style={listOver}>
-                    <Image style={[imgInfo,imgMargin]} source={socialDD} />
-                    <Text style={colorTextPP}>Share: <Text style={colorNumPP}>45.8k</Text></Text>
-                </View>
+            <View style={overLayoutShare}>
+                <TouchableOpacity style={listOverShare}>
+                    <Image style={[imgWidthGoogle,imgMargin]} source={googleIC} />
+                    <Text style={colorNumPP}>Google</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={listOverShare}>
+                    <Image style={[imgShare,imgMargin]} source={facebookIC} />
+                    <Text style={colorNumPP}>Facebook</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={listOverShare}>
+                    <Image style={[imgShare,imgMargin]} source={twitterIC} />
+                    <Text style={colorNumPP}>Twitter</Text>
+                </TouchableOpacity>
             </View>
-
         </View>
 
       </View>

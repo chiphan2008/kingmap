@@ -50,12 +50,31 @@ module.exports = {
     minHeight: height-50,
     padding:20,
   },
+  titleSubCat:{
+    fontSize:20,
+    padding:20
+  },
+  wrapFlatList:{
+    paddingLeft:20,
+    paddingBottom:150,
+  },
+  txtTitleOverCat:{color:'#2F353F',fontSize:18,marginBottom:7,maxHeight:50,overflow:'hidden'},
+  txtAddrOverCat:{
+    color:'#6587A8',fontSize:14,marginBottom:7,overflow: 'hidden'
+  },
+  flatlistItemCat:{
+    justifyContent:'space-between',
+    flexDirection:'row',
+    marginBottom:20,
+  },
+
   flatItemLoc:{
     flexDirection:'row',
     paddingBottom:20,
   },
   flatItem:{
     alignItems:'center',
+    justifyContent:'flex-start',
     borderBottomWidth:1,
     borderBottomColor:'#E3E4E8',
     borderRightWidth:1,
@@ -65,8 +84,9 @@ module.exports = {
     paddingTop:20,
   },
   flatlistItem:{
-    justifyContent:'space-between',
+    width:(width-20),
     flexDirection:'row',
+
   },
   imgFlatItem:{
     marginRight:10,
@@ -121,6 +141,10 @@ module.exports = {
   wrapIcRight:{
     width:55,justifyContent: 'space-between',flexDirection: 'row',marginTop: 7,
   },
+  imgWidthGoogle : {width: 25,height: 16,marginRight:2},
+  imgShare : {
+      width: 16,height: 16,
+  },
   imgInfo : {
       width: 20,height: 20,
   },
@@ -150,7 +174,14 @@ module.exports = {
     top: Platform.OS ==='ios' ? 55 :40,
     alignItems:'center',
     position:'absolute',
-    width,height:300,
+    width,
+    zIndex:5,
+  },
+  popoverShare : {
+    top: Platform.OS ==='ios' ? 55 :40,
+    position:'absolute',
+    alignItems:'flex-end',
+    width,
     zIndex:5,
   },
   colorTextPP :{color:'#B8BBC0'},
@@ -162,11 +193,17 @@ module.exports = {
   imgMargin: {margin:10},
   listCatOver:{paddingRight:20,paddingBottom:20,paddingLeft:20,},
   listOver:{alignItems:'center',flexDirection:'row',padding:10,borderBottomColor:'#EEEDEE', borderBottomWidth:1,},
+  listOverShare:{alignItems:'center',flexDirection:'row',paddingLeft:5},
+
+  overLayoutShare:{
+    backgroundColor:'#fff',width: 130,borderRadius:4,overflow:'hidden',top:7,right:10,paddingBottom:Platform.OS==='ios' ? 0 : 10,
+  },
   overLayout:{backgroundColor:'#fff',width: width-20,borderRadius:4,overflow:'hidden',top:7},
   overLayoutCat:{
       backgroundColor:'#fff',width: 150,
       top: Platform.OS==='ios' ? 10 : 25,
       paddingTop:20,
+      paddingBottom:Platform.OS==='ios' ? 0 : 20,
       borderColor:'#E1E7EC',
       zIndex:4,
       shadowOffset:{  width: 2,  height: 2,  },
@@ -174,7 +211,7 @@ module.exports = {
       shadowOpacity: .8,
   },
   catInfoOver:{padding:15,bottom:0,zIndex:6,backgroundColor:'#fff',width,flexDirection:'row'},
-  wrapInfoOver:{flex:1,flexWrap: 'wrap',},
+  wrapInfoOver:{flex:1,flexWrap: 'wrap',justifyContent:'space-between'},
   txtTitleOver:{color:'#2F353F',fontSize:20,marginBottom:10,maxHeight:50,overflow:'hidden'},
   txtAddrOver:{color:'#6587A8',fontSize:14,height:40,},
   show : { display: 'flex'},

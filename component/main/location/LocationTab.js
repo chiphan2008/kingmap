@@ -23,15 +23,6 @@ import likeDD from '../../../src/icon/ic-gray/ic-like.png';
 import socialDD from '../../../src/icon/ic-gray/ic-social.png';
 
 
-import plusIC from '../../../src/icon/ic-home/ic-plus.png';
-import hotelOval from '../../../src/icon/ic-home/Oval-hotel.png';
-import bankOval from '../../../src/icon/ic-home/Oval-bank.png';
-import foodOval from '../../../src/icon/ic-home/Oval-food.png';
-import logoHome from '../../../src/icon/ic-home/Logo-home.png';
-import entertainmentOval from '../../../src/icon/ic-home/Oval-entertainment.png';
-import coffeeOval from '../../../src/icon/ic-home/Oval-coffee.png';
-import shopOval from '../../../src/icon/ic-home/Oval-shop.png';
-
 import {Select, Option} from "react-native-chooser";
 
 export default class Hometab extends Component {

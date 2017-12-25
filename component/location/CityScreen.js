@@ -19,8 +19,14 @@ export default class CountryScreen extends Component {
       pressStatus: false,
       listCountry : [],
       listCity : [],
-      valueCountry : "Chọn quốc gia",
-      valueCity : "Chọn tỉnh thành phố",
+      slCountry :{
+          name : "Chọn quốc gia",
+          id:-1,
+      },
+      slCity : {
+        name: "Chọn tỉnh thành phố",
+        id:-1,
+      },
     };
 
 
@@ -28,37 +34,48 @@ export default class CountryScreen extends Component {
 
   onSelectCountry(value, label) {
     this.setState({
-      valueCountry : value
+      slCountry : {
+          name : label,
+          id:value,
+      }
     });
+    this.getCity(value);
   }
   onSelectCity(value, label) {
     this.setState({
-      valueCity : value
+      slCity : {
+          name : label,
+          id:value,
+      }
     });
+
   }
   save(){
-    if(this.state.valueCountry !=='Chọn quốc gia' && this.state.valueCity !=='Chọn tỉnh thành phố'){
-      AsyncStorage.setItem('@CountryLocationKey:key', JSON.stringify({name:this.state.valueCountry}));
-      AsyncStorage.setItem('@CityLocationKey:key', JSON.stringify({name:this.state.valueCity}));
-      console.log('this.state.valueCountry',this.state.valueCountry)
+    if(this.state.slCountry.id !==-1 && this.state.slCity.id !==-1){
+      AsyncStorage.setItem('@CountryLocationKey:key', JSON.stringify({name:this.state.slCountry.name,id:this.state.slCountry.id}));
+      AsyncStorage.setItem('@CityLocationKey:key', JSON.stringify({name:this.state.slCity.name,id:this.state.slCity.id}));
+      //console.log('this.state.valueCountry',this.state.valueCountry)
       this.props.navigation.navigate('MainScr');
     }
-
+  }
+  getCountry(){
+    getApi(`${global.url}${'countries'}`)
+    .then(arrCountry => {
+        this.setState({ listCountry: arrCountry.data });
+    })
+    .catch(err => console.log(err));
+  }
+  getCity(id_country){
+    getApi(`${global.url}${'cities/'}${id_country}`)
+    .then(arrCity => {
+      //console.log('arrCity',arrCity);
+        this.setState({ listCity: arrCity.data });
+    })
+    .catch(err => console.log(err));
   }
   componentWillMount() {
       // const idType = this.props.category.id;
-      getApi(global.url+'countries')
-      .then(arrCountry => {
-        //console.log('arrCountry',arrCountry.data);
-          this.setState({ listCountry: this.state.listCountry = arrCountry.data });
-          for (let cityObject of arrCountry.data) {
-            getApi(global.url+'cities/'+ cityObject.id)
-            .then(arrCity => {
-              this.setState({ listCity: this.state.listCity = arrCity.data });
-            });
-          }
-      })
-      .catch(err => console.log(err));
+      this.getCountry();
   }
 
   render() {
@@ -82,7 +99,7 @@ export default class CountryScreen extends Component {
               <Text style={title}>COUNTRY/ CITY</Text>
               <Select
                     onSelect = {this.onSelectCountry.bind(this)}
-                    defaultText  = {this.state.valueCountry}
+                    defaultText  = {this.state.slCountry.name}
                     style = {[selectBox,selectBoxCountry]}
                     textStyle = {{color:'#5b89ab'}}
                     optionListStyle={[optionListStyle,optionListStyleCountry]}
@@ -92,13 +109,13 @@ export default class CountryScreen extends Component {
                     indicatorSize={7}
                   >
                   {this.state.listCountry.map((e)=>(
-                    <Option value={e.name} key={e.id}>{e.name}</Option>
+                    <Option value={e.id} key={e.id}>{e.name}</Option>
                   ))}
               </Select>
 
               <Select
                     onSelect = {this.onSelectCity.bind(this)}
-                    defaultText  = {this.state.valueCity}
+                    defaultText  = {this.state.slCity.name}
                     style = {[selectBox,selectBoxCity]}
                     textStyle = {{color:'#5b89ab'}}
                     optionListStyle={[optionListStyle,optionListStyleCity]}
@@ -108,7 +125,7 @@ export default class CountryScreen extends Component {
                     indicatorSize={7}
                   >
                   {this.state.listCity.map((e)=>(
-                    <Option value={e.name} key={e.id}>{e.name}</Option>
+                    <Option value={e.id} key={e.id}>{e.name}</Option>
                   ))}
 
               </Select>

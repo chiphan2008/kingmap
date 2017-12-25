@@ -8,6 +8,9 @@ import {Platform, View, Text, StyleSheet, Dimensions, Image,
 const {height, width} = Dimensions.get('window');
 import util from 'util';
 import styles from '../../styles';
+import global from '../../global';
+import getApi from '../../api/getApi';
+import getLanguage from '../../api/getLanguage';
 
 import closeIC from '../../../src/icon/ic-white/ic-close.png';
 import searchIC from '../../../src/icon/ic-gray/ic-search.png';
@@ -20,31 +23,21 @@ export default class Hometab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      labelLoc : "Địa điểm",
-      labelCat : "Danh mục",
-      labelSer : "Dịch vụ",
-      valueLoc : 0,
-      valueCat : 0,
-      valueSer : 0,
+      listCategory : [],
     }
   }
-  onSelectLoc(value, label) {
-    this.setState({
-      labelLoc : label,
-      valueLoc : value,
-    });
+
+  getCategory(lang){
+    getApi(global.url+'categories?language='+lang)
+    .then(arrCategory => {
+      console.log('arrCategory',arrCategory);
+        this.setState({ listCategory: arrCategory.data });
+    })
+    .catch(err => console.log(err));
   }
-  onSelectCat(value, label) {
-    this.setState({
-      labelCat : label,
-      valueCat : value,
-    });
-  }
-  onSelectSer(value, label) {
-    this.setState({
-      labelSer : label,
-      valueSer : value,
-    });
+
+  componentWillMount(){
+    getLanguage().then((e) => this.getCategory(e.valueLang));
   }
 
   render() {
@@ -79,35 +72,19 @@ export default class Hometab extends Component {
 <View style={wrapFilter}>
         <View style={wrapDistribute}>
 
-                          <FlatList
-                             data={[
-                               {key: 'Joel'},
-                               {key: 'John'},
-                               {key: 'Jillian'},
-                               {key: 'Jimmy'},
-                               {key: 'Julie'},
-                             ]}
-                             renderItem={({item}) => (
+                  <FlatList
+                     data={this.state.listCategory}
+                     renderItem={({item}) => (
 
-                               <View style={flatlistItem}>
-                               <TouchableOpacity style={flatItem}>
-                                   <Image style={imgFlatItemLoc} source={{uri:'https://diadiem.kingmap.vn/upload/img_content_thumbnail/1506316541_avatar_yXvdIt6ql7nkD.jpeg'}} />
-                                   <Text>{item.key}</Text>
-                              </TouchableOpacity>
-                              <TouchableOpacity style={flatItem}>
-                                  <Image style={imgFlatItemLoc} source={{uri:'https://diadiem.kingmap.vn/upload/img_content_thumbnail/1506316541_avatar_yXvdIt6ql7nkD.jpeg'}} />
-                                  <Text>{item.key}</Text>
-                             </TouchableOpacity>
-                             <TouchableOpacity style={flatItem}>
-                                 <Image style={imgFlatItemLoc} source={{uri:'https://diadiem.kingmap.vn/upload/img_content_thumbnail/1506316541_avatar_yXvdIt6ql7nkD.jpeg'}} />
-                                 <Text>{item.key}</Text>
-                            </TouchableOpacity>
-                        </View>
+                       <TouchableOpacity style={flatItem}>
+                           <Image style={imgFlatItemLoc} source={{uri:`${global.url_media}${item.image}`}} />
+                           <Text>{item.name}</Text>
+                      </TouchableOpacity>
 
-                             )}
-
-                           />
-
+                     )}
+                     keyExtractor={item => item.id}
+                   />
+            
         </View>
 
       </View>
