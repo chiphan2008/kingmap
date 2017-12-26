@@ -12,11 +12,10 @@ import bgMap from '../../src/icon/bg-map.png';
 const {height, width} = Dimensions.get('window');
 
 
-export default class CountryScreen extends Component {
+export default class CityScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pressStatus: false,
       listCountry : [],
       listCity : [],
       slCountry :{
@@ -50,11 +49,15 @@ export default class CountryScreen extends Component {
     });
 
   }
-  save(){
+  saveLocation(){
+    //console.log('this.state.slCountry.id',this.state.slCountry.id,this.state.slCity.id)
     if(this.state.slCountry.id !==-1 && this.state.slCity.id !==-1){
-      AsyncStorage.setItem('@CountryLocationKey:key', JSON.stringify({name:this.state.slCountry.name,id:this.state.slCountry.id}));
-      AsyncStorage.setItem('@CityLocationKey:key', JSON.stringify({name:this.state.slCity.name,id:this.state.slCity.id}));
-      //console.log('this.state.valueCountry',this.state.valueCountry)
+      AsyncStorage.setItem('@LocationKey:key', JSON.stringify({
+                nameCountry:this.state.slCountry.name,
+                idCountry:this.state.slCountry.id,
+                nameCity:this.state.slCity.name,
+                idCity:this.state.slCity.id,
+            }));
       this.props.navigation.navigate('MainScr');
     }
   }
@@ -65,6 +68,7 @@ export default class CountryScreen extends Component {
     })
     .catch(err => console.log(err));
   }
+
   getCity(id_country){
     getApi(`${global.url}${'cities/'}${id_country}`)
     .then(arrCity => {
@@ -98,7 +102,7 @@ export default class CountryScreen extends Component {
               <Image style={imgLogo} source={LogoHome} />
               <Text style={title}>COUNTRY/ CITY</Text>
               <Select
-                    onSelect = {this.onSelectCountry.bind(this)}
+                    onSelect = {()=>this.onSelectCountry.bind(this)}
                     defaultText  = {this.state.slCountry.name}
                     style = {[selectBox,selectBoxCountry]}
                     textStyle = {{color:'#5b89ab'}}
@@ -114,7 +118,7 @@ export default class CountryScreen extends Component {
               </Select>
 
               <Select
-                    onSelect = {this.onSelectCity.bind(this)}
+                    onSelect = {()=>this.onSelectCity.bind(this)}
                     defaultText  = {this.state.slCity.name}
                     style = {[selectBox,selectBoxCity]}
                     textStyle = {{color:'#5b89ab'}}
@@ -133,9 +137,8 @@ export default class CountryScreen extends Component {
         <View style={btnWrap}>
 
         <TouchableOpacity
-            style={this.state.pressStatus ? btnPress : btn }
-            onPress={this.save.bind(this)}
-
+            style={btn}
+            onPress={()=>{this.saveLocation()}}
           >
             <Text style={ colorNext }>Next</Text>
             </TouchableOpacity>

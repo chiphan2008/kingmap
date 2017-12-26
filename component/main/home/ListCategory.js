@@ -22,10 +22,22 @@ export default class CategoryScreen extends Component {
       showCat : false,
 
       curLocation:{
-        latlng: '10.80467476,106.71593103',
+        latlng: '',
       },
       listData:[],
-      nameSubCat: null,
+      nameSubCat: '',
+      markers:[{
+        id : 1,
+        lat: 10.780843591000904,
+        lng: 106.67830749999996,
+        name: '',
+        _district:{name:''},
+        _city:{name:''},
+        _country:{name:''},
+        _category_type:{marker:''},
+        address:'',
+        avatar:'',
+      },],
     };
 
 
@@ -36,21 +48,37 @@ export default class CategoryScreen extends Component {
     getApi(global.url+'content-by-category?category='+idcat+'&subcategory='+idsub+'&location='+loc)
     .then(arrData => {
       //console.log('parseFloat(marker.lat)',arrTest.data)
-        if(arrData.data.length === 0) arrData.data = this.state.markers;
+        //if(arrData.data.length === 0) arrData.data = this.state.markers;
         this.setState({ listData: arrData.data });
     })
     .catch(err => console.log(err));
   }
   componentWillMount() {
-    const id = this.props.navigation.state.params.idCat;
-    const idsub = this.props.navigation.state.params.id_subCat;
-    const name_subCat = this.props.navigation.state.params.name_subCat;
-    this.getCategory(id,idsub,name_subCat,this.state.curLocation.latlng)
+    navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latlng = `${position.coords.latitude}${','}${position.coords.longitude}`;
+            const id = this.props.navigation.state.params.idCat;
+            const idsub = this.props.navigation.state.params.id_subCat;
+            const name_subCat = this.props.navigation.state.params.name_subCat;
+            this.getCategory(id,idsub,name_subCat,latlng)
+            this.setState({
+              curLocation : {
+                latlng:latlng,
+              }
+            });
+            //console.log('this.props.navigation.state.params',this.props.navigation.state.params.idCat);
+           },
+           (error) => {
+            //console.log(error)
+          },
+          {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
+    );
+
   }
 
   render() {
 
-    const {navigate} = this.props.navigation;
+    const {navigate, goBack} = this.props.navigation;
     const { idCat, id_subCat, name_cat, sub_cat, name_subCat } = this.props.navigation.state.params;
     //console.log("this.props.CategoryScreen=",util.inspect(this.props.navigation.state.key,false,null));
     const {
@@ -65,7 +93,7 @@ export default class CategoryScreen extends Component {
       <View style={container}>
         <View style={headCatStyle}>
             <View style={headContent}>
-                <TouchableOpacity onPress={()=> navigate('CatScr',{idCat,name_cat,sub_cat})}>
+                <TouchableOpacity onPress={()=> goBack()}>
                 <Image source={arrowLeft} style={{width:16, height:16,marginTop:5}} />
                 </TouchableOpacity>
 
@@ -82,14 +110,18 @@ export default class CategoryScreen extends Component {
 
         <View style={[popover, this.state.showCat ? show : hide]}>
             <View style={overLayoutCat}>
-            {sub_cat.map((e)=>
-              (<TouchableOpacity
-                onPress={()=>{ this.getCategory(idCat,e.id,e.name,this.state.curLocation.latlng) }}
-                key={e.id}
-                style={listCatOver}>
-                  <Text style={colorText}>{e.name}</Text>
-              </TouchableOpacity>))
-            }
+            <FlatList
+               keyExtractor={item => item.id}
+               ListEmptyComponent={<Text>Loading ...</Text>}
+               data={sub_cat}
+               renderItem={({item}) => (
+                 <TouchableOpacity
+                   onPress={()=>{ this.getCategory(idCat,item.id,item.name,this.state.curLocation.latlng) }}
+                   style={listCatOver}>
+                     <Text style={colorText}>{item.name}</Text>
+                 </TouchableOpacity>
+               )} />
+
             </View>
         </View>
 
@@ -97,6 +129,7 @@ export default class CategoryScreen extends Component {
           <Text style={titleSubCat}>{this.state.nameSubCat.toUpperCase()}</Text>
             <View style={wrapFlatList}>
             <FlatList
+               keyExtractor={item => item.id}
                data={this.state.listData}
                renderItem={({item}) => (
                   <View style={flatlistItemCat}>
@@ -108,7 +141,7 @@ export default class CategoryScreen extends Component {
                           <TouchableOpacity>
                               <Text style={txtTitleOverCat} numberOfLines={2}>{item.name}</Text>
                           </TouchableOpacity>
-                              <Text style={txtAddrOverCat} numberOfLines={1}>{item.address}</Text>
+                              <Text style={txtAddrOverCat} numberOfLines={1}>{`${item.address}${', '}${item._district.name}${', '}${item._city.name}${', '}${item._country.name}`}</Text>
                         </View>
 
                           <View style={{flexDirection:'row'}}>
@@ -128,7 +161,7 @@ export default class CategoryScreen extends Component {
                       </View>
                   </View>
                )}
-               keyExtractor={item => item.id}
+
              />
              </View>
           </View>

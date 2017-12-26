@@ -18,7 +18,6 @@ import infoIC from '../../../src/icon/ic-white/ic-analysis.png';
 import socialIC from '../../../src/icon/ic-white/ic-social.png';
 
 
-
 export default class Hometab extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +29,7 @@ export default class Hometab extends Component {
   getCategory(lang){
     getApi(global.url+'categories?language='+lang)
     .then(arrCategory => {
-      console.log('arrCategory',arrCategory);
+      //console.log('arrCategory',arrCategory);
         this.setState({ listCategory: arrCategory.data });
     })
     .catch(err => console.log(err));
@@ -41,8 +40,8 @@ export default class Hometab extends Component {
   }
 
   render() {
-    const {navigate} = this.props.navigation;
-    //console.log("this.props.Hometab=",util.inspect(this.props.navigation,false,null));
+    const {navigate,goBack} = this.props.navigation;
+    //console.log("this.props.DistributeTab=",util.inspect(this.props.navigation,false,null));
     const {
       container,
       headCatStyle,headContent, wrapDistribute,wrapFilter,
@@ -56,7 +55,7 @@ export default class Hometab extends Component {
 
       <View style={headCatStyle}>
           <View style={headContent}>
-              <TouchableOpacity onPress={()=>navigate('MainScr')}>
+              <TouchableOpacity onPress={()=>goBack()}>
               <Image source={closeIC} style={{width:20, height:20,marginTop:5}} />
               </TouchableOpacity>
               <TouchableOpacity
@@ -64,32 +63,27 @@ export default class Hometab extends Component {
                     onPress={()=>this.setState({showCat :!this.state.showCat})}
                     >
                     <Text style={{color:'white',fontSize:18}}>Phân loại</Text>
-
               </TouchableOpacity>
               <View></View>
           </View>
       </View>
 <View style={wrapFilter}>
-        <View style={wrapDistribute}>
-
-                  <FlatList
-                     data={this.state.listCategory}
-                     renderItem={({item}) => (
-
-                       <TouchableOpacity style={flatItem}>
-                           <Image style={imgFlatItemLoc} source={{uri:`${global.url_media}${item.image}`}} />
-                           <Text>{item.name}</Text>
-                      </TouchableOpacity>
-
-                     )}
-                     keyExtractor={item => item.id}
-                   />
-            
-        </View>
-
-      </View>
-
-
+    <View style={wrapDistribute}>
+    <View style={flatlistItem}>
+        <FlatList
+           numColumns={3}
+           data={this.state.listCategory}
+           renderItem={({item}) =>(
+             <TouchableOpacity style={flatItem}>
+                 <Image style={imgFlatItemLoc} source={{uri:`${global.url_media}${item.image}`}} />
+                 <Text>{item.name}</Text>
+             </TouchableOpacity>
+           )}
+           keyExtractor={item => item.id}
+         />
+         </View>
+    </View>
+  </View>
 
       </View>
     );

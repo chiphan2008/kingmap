@@ -1,5 +1,6 @@
 import {Dimensions,Platform} from 'react-native';
 const {height, width} = Dimensions.get('window');
+
 module.exports = {
   container: {flex: 1,backgroundColor:'#F1F2F5'},
   bgImg : {
@@ -17,12 +18,7 @@ module.exports = {
       backgroundColor: '#D0021B',paddingTop: Platform.OS==='ios' ? 30 : 20, alignItems: 'center',height: 65,
       position:'relative',zIndex:5,
   },
-  wrapDistribute:{
-    width:width-20,borderRadius:5,backgroundColor:'#fff',minHeight:height,
-    shadowOffset:{  width: 1,  height: 1,  },
-    shadowColor: '#999',
-    shadowOpacity: .5,
-  },
+
   wrapFilter:{alignItems:'center',marginTop:15,marginBottom:15,},
   filterFrame:{width:width-40,justifyContent:'space-between',alignItems:'center',flexDirection:'row'},
   inputSearch : {
@@ -30,9 +26,13 @@ module.exports = {
   },
   selectBoxLoc:{
     backgroundColor:'#fff',
-    width:100,
+    width:Platform.OS ==='ios' ? 100 : 130,
     borderRadius:4,
     borderColor:'#CED0D5',
+    borderWidth:1,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    padding:10,
   },
   optionListLoc:{
     backgroundColor:'#fff',
@@ -70,11 +70,19 @@ module.exports = {
 
   flatItemLoc:{
     flexDirection:'row',
+    justifyContent:'space-between',
     paddingBottom:20,
+  },
+  wrapDistribute:{
+    width:width-20,borderRadius:5,backgroundColor:'#fff',minHeight:height,
+    shadowOffset:{  width: 1,  height: 1,  },
+    flexDirection:'row',
+    shadowColor: '#999',
+    shadowOpacity: .5,
+    paddingBottom:80,
   },
   flatItem:{
     alignItems:'center',
-    justifyContent:'flex-start',
     borderBottomWidth:1,
     borderBottomColor:'#E3E4E8',
     borderRightWidth:1,
@@ -86,15 +94,15 @@ module.exports = {
   flatlistItem:{
     width:(width-20),
     flexDirection:'row',
-
   },
   imgFlatItem:{
     marginRight:10,
     width:90,height:90,
   },
   imgFlatItemLoc:{
-
-    width:90,height:90,
+    //borderRadius:40,
+    width:70,height:70,
+    marginBottom:5,
   },
   wrapFlatRight:{
 
@@ -200,10 +208,12 @@ module.exports = {
   },
   overLayout:{backgroundColor:'#fff',width: width-20,borderRadius:4,overflow:'hidden',top:7},
   overLayoutCat:{
-      backgroundColor:'#fff',width: 150,
+      backgroundColor:'#fff',
+      width: 190,
+      minHeight:50,
+      maxHeight: 500,
       top: Platform.OS==='ios' ? 10 : 25,
       paddingTop:20,
-      paddingBottom:Platform.OS==='ios' ? 0 : 20,
       borderColor:'#E1E7EC',
       zIndex:4,
       shadowOffset:{  width: 2,  height: 2,  },

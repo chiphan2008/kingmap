@@ -67,9 +67,10 @@ export default class HomeTab extends Component {
       like : 'Like',
       share : 'Share',
     };
-
     this.state = {
       //permission: PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      Width_Layout:'',
+      Height_Layout:'',
       listCategory : [],
       listStatus : [],
       lang : staticLang_vn,
@@ -84,23 +85,27 @@ export default class HomeTab extends Component {
       error: null,
 
     };
-    getLanguage().then((e) =>{
-      if(e!==null){
-    this.setState({
-      selectLang:{
-        valueLang:e.valueLang,
-        labelLang:e.labelLang,
-      }
-    });
-    e.valueLang==='vn' ?  this.setState({lang : staticLang_vn}) : this.setState({lang : staticLang_en});
-   }
-  });
+
+
     arrLang = [{name:'VIE',v:'vn'},{name:'ENG',v:'en'}];
   }
 
+  getLang(){
+    getLanguage().then((e) =>{
+      if(e!==null){
+          this.setState({
+            selectLang:{
+              valueLang:e.valueLang,
+              labelLang:e.labelLang,
+            }
+          });
+          e.valueLang==='vn' ?  this.setState({lang : staticLang_vn}) : this.setState({lang : staticLang_en});
+          this.getCategory(this.state.selectLang.valueLang);
+     }
+    });
+  }
+
   onSelectLang(value, label) {
-    //console.log('value',value)
-    //this.lang= this.staticLang_`${value}`;
     AsyncStorage.setItem('@MyLanguage:key',JSON.stringify({valueLang:value,labelLang :label}))
     value==='vn' ?  this.setState({lang : staticLang_vn}) : this.setState({lang : staticLang_en});
     this.getCategory(value)
@@ -116,7 +121,7 @@ export default class HomeTab extends Component {
   getCategory(lang){
     getApi(global.url+'categories?language='+lang)
     .then(arrCategory => {
-        this.setState({ listCategory: this.state.listCategory = arrCategory.data });
+        this.setState({ listCategory: arrCategory.data });
     })
     .catch(err => console.log(err));
   }
@@ -128,14 +133,13 @@ export default class HomeTab extends Component {
     .catch(err => console.log(err));
   }
   componentWillMount() {
+      this.getLang();
       this.getListStatus();
       this.getCategory(this.state.selectLang.valueLang);
-
   }
 
   componentDidMount() {
     //console.log("componentDidMount=",util.inspect(PermissionsAndroid.request,false,null));
-    //this._requestPermission();
     navigator.geolocation.getCurrentPosition(
           (position) => {
             //console.log(position);
@@ -148,6 +152,7 @@ export default class HomeTab extends Component {
   }
 
   render() {
+    const {height, width} = Dimensions.get('window');
     const {navigate} = this.props.navigation;
     //console.log("this.props.Hometab=",util.inspect(this.state.listCategory,false,null));
     const {
@@ -159,7 +164,7 @@ export default class HomeTab extends Component {
     } = styles;
 
     return (
-      <View style={container}>
+      <View style={container} >
       <Image source={bgMap} style={bgImg} />
         <View style={headStyle}>
             <View style={headContent}>

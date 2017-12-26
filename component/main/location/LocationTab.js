@@ -8,148 +8,93 @@ import {Platform, View, Text, StyleSheet, Dimensions, Image,
 const {height, width} = Dimensions.get('window');
 import util from 'util';
 import styles from '../../styles';
+import global from '../../global';
+import getApi from '../../api/getApi';
+import getLanguage from '../../api/getLanguage';
 
-import bgMap from '../../../src/icon/bg-map.png';
-import logoTop from '../../../src/icon/ic-white/Logo-ngang.png';
+import closeIC from '../../../src/icon/ic-white/ic-close.png';
 import searchIC from '../../../src/icon/ic-gray/ic-search.png';
 import infoIC from '../../../src/icon/ic-white/ic-analysis.png';
 import socialIC from '../../../src/icon/ic-white/ic-social.png';
 
-import upDD from '../../../src/icon/ic-white/ic-dropdown_up.png';
-import locationDD from '../../../src/icon/ic-gray/ic-location.png';
-import onlineDD from '../../../src/icon/ic-gray/ic-online.png';
-import checkDD from '../../../src/icon/ic-gray/ic-check-gray.png';
-import likeDD from '../../../src/icon/ic-gray/ic-like.png';
-import socialDD from '../../../src/icon/ic-gray/ic-social.png';
-
-
-import {Select, Option} from "react-native-chooser";
 
 export default class Hometab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      labelLoc : "Địa điểm",
-      labelCat : "Danh mục",
-      labelSer : "Dịch vụ",
-      valueLoc : 0,
-      valueCat : 0,
-      valueSer : 0,
+      listCategory : [],
+      selectLang: {
+        valueLang : '',
+        labelLang : '',
+      },
     }
   }
-  onSelectLoc(value, label) {
-    this.setState({
-      labelLoc : label,
-      valueLoc : value,
-    });
+
+  getCategory(lang){
+    getApi(global.url+'categories?language='+lang)
+    .then(arrCategory => {
+      //console.log('arrCategory',arrCategory.data);
+        this.setState({ listCategory: arrCategory.data });
+    })
+    .catch(err => console.log(err));
   }
-  onSelectCat(value, label) {
-    this.setState({
-      labelCat : label,
-      valueCat : value,
-    });
-  }
-  onSelectSer(value, label) {
-    this.setState({
-      labelSer : label,
-      valueSer : value,
+
+  componentWillMount(){
+    getLanguage().then((e) => {this.getCategory(e.valueLang);
+      this.setState({selectLang: {
+        valueLang : e.valueLang,
+        labelLang : e.labelLang,
+      },})
     });
   }
 
   render() {
-    const {navigation} = this.props;
-    //console.log("this.props.Hometab=",util.inspect(this.props.navigation,false,null));
+    const {navigate} = this.props.navigation;
+    //console.log("this.props.DistributeTab=",util.inspect(this.props.navigation,false,null));
     const {
       container,
-      headLocationStyle, filterFrame,wrapFilter,
-      inputSearch,show,hide,colorTextPP,colorNumPP,
-      selectBoxLoc,optionListLoc,OptionItemLoc,
-      wrapListLoc,flatItemLoc,imgFlatItem,wrapFlatRight
+      headCatStyle,headContent, wrapDistribute,wrapFilter,
+      show,hide,colorTextPP,colorNumPP,
+      wrapListLoc,flatItem,flatlistItem,imgFlatItemLoc,wrapFlatRight
 
     } = styles;
 
     return (
       <View style={container}>
 
-        <View style={headLocationStyle}>
-          <TextInput underlineColorAndroid='transparent' placeholder="Find place" style={inputSearch} />
-          <Image style={{width:16,height:16,top:-28,left:-50}} source={searchIC} />
-        </View>
-
-        <View style={wrapFilter}>
-
-                <View style={filterFrame}>
-
-                <Select
-                      onSelect = {this.onSelectLoc.bind(this)}
-                      defaultText  = {this.state.labelLoc}
-                      style = {selectBoxLoc}
-                      textStyle = {{color:'#303B50'}}
-                      optionListStyle={optionListLoc}
-                      indicatorColor="#B0C2D2"
-                      indicator="down"
-                      indicatorSize={7}
-                      transparent
+      <View style={headCatStyle}>
+          <View style={headContent}>
+              <TouchableOpacity onPress={()=>this.props.navigation.goBack()}>
+              <Image source={closeIC} style={{width:20, height:20,marginTop:5}} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                    style={{alignItems:'center'}}
+                    onPress={()=>this.setState({showCat :!this.state.showCat})}
                     >
-                    <Option style={OptionItemLoc} value ="VIE">VIE</Option>
-                    <Option style={OptionItemLoc} value="ENG">ENG</Option>
-                </Select>
-                <Select
-                      onSelect = {this.onSelectLoc.bind(this)}
-                      defaultText  = {this.state.labelLoc}
-                      style = {selectBoxLoc}
-                      textStyle = {{color:'#303B50'}}
-                      optionListStyle={optionListLoc}
-                      indicatorColor="#B0C2D2"
-                      indicator="down"
-                      indicatorSize={7}
-                      transparent
-                    >
-                    <Option style={OptionItemLoc} value ="VIE">VIE</Option>
-                    <Option style={OptionItemLoc} value="ENG">ENG</Option>
-                </Select>
-                <Select
-                      onSelect = {this.onSelectLoc.bind(this)}
-                      defaultText  = {this.state.labelLoc}
-                      style = {selectBoxLoc}
-                      textStyle = {{color:'#303B50'}}
-                      optionListStyle={optionListLoc}
-                      indicatorColor="#B0C2D2"
-                      indicator="down"
-                      indicatorSize={7}
-                      transparent
-                    >
-                    <Option style={OptionItemLoc} value ="VIE">VIE</Option>
-                    <Option style={OptionItemLoc} value="ENG">ENG</Option>
-                </Select>
-
-              </View>
-        </View>
-
-        <View style={wrapListLoc}>
-                  <FlatList
-                     data={[
-                       {key: 'Joel'},
-                       {key: 'John'},
-                       {key: 'Jillian'},
-                       {key: 'Jimmy'},
-                       {key: 'Julie'},
-                     ]}
-                     renderItem={({item}) => (
-                       <View style={flatItemLoc}>
-                       <Image style={imgFlatItem} source={{uri:'http://diadiem.kingmap.vn/upload/img_content_thumbnail/1506316541_avatar_yXvdIt6ql7nkD.jpeg'}} />
-                       <View style={wrapFlatRight}>
-                           <Text>{item.key}</Text>
-                           <Text>{item.key}</Text>
-                           <View style={wrapFlatRight}>
-                               <Text>{item.key}</Text>
-                               <Text>{item.key}</Text>
-                           </View>
-                       </View>
-                       </View>
-                     )}
-                   />
-        </View>
+                    <Text style={{color:'white',fontSize:18}}> Phân loại </Text>
+              </TouchableOpacity>
+              <View></View>
+          </View>
+      </View>
+<View style={wrapFilter}>
+    <View style={wrapDistribute}>
+    <View style={flatlistItem}>
+        <FlatList
+           numColumns={3}
+           data={this.state.listCategory}
+           renderItem={({item}) =>(
+             <TouchableOpacity
+              onPress={()=>navigate('ListLocScr',{idCat:item.id,lang:this.state.selectLang})}
+              style={flatItem}>
+                 <Image style={imgFlatItemLoc} source={{uri:`${global.url_media}${item.image}`}} />
+                 <Text>{item.name}</Text>
+             </TouchableOpacity>
+           )}
+           keyExtractor={item => item.id}
+         />
+         </View>
+    </View>
+  </View>
 
       </View>
     );

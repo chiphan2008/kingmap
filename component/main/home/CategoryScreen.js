@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput, TouchableOpacity} from 'react-native';
+import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput, TouchableOpacity,FlatList,} from 'react-native';
 const {height, width} = Dimensions.get('window');
 import util from 'util';
 import getApi from '../../api/getApi';
@@ -41,10 +41,12 @@ export default class CategoryScreen extends Component {
         _district:{name:''},
         _city:{name:''},
         _country:{name:''},
+        _category_type:{marker:''},
         address:'',
         avatar:'',
       },],
     }
+
 
   }
 
@@ -56,12 +58,14 @@ export default class CategoryScreen extends Component {
           arrData.data = this.state.markers;
         else
           this.setState({showInfoOver:true});
+          //console.log('--arrData.data--',arrData.data);
 
         this.setState({ markers: arrData.data });
     })
     .catch(err => console.log(err));
   }
-  componentWillMount() {
+
+  getLoc(){
     navigator.geolocation.getCurrentPosition(
           (position) => {
             const latlng = `${position.coords.latitude}${','}${position.coords.longitude}`;
@@ -86,12 +90,14 @@ export default class CategoryScreen extends Component {
           },
           {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
     );
-
+  }
+  componentWillMount(){
+   this.getLoc();
   }
 
   render() {
 
-    const {navigate} = this.props.navigation;
+    const {navigate,goBack} = this.props.navigation;
     const { idCat, name_cat, sub_cat } = this.props.navigation.state.params;
     //console.log("this.props.CategoryScreen=",util.inspect(this.props.navigation.state.key,false,null));
     const {
@@ -107,7 +113,7 @@ export default class CategoryScreen extends Component {
         <View style={headCatStyle}>
             <View style={headContent}>
 
-                <TouchableOpacity onPress={()=> navigate('MainScr')}>
+                <TouchableOpacity onPress={()=> goBack()}>
                 <Image source={arrowLeft} style={{width:16, height:16,marginTop:5}} />
                 </TouchableOpacity>
 
@@ -124,26 +130,29 @@ export default class CategoryScreen extends Component {
 
         <View style={[popover, this.state.showCat ? show : hide]}>
             <View style={overLayoutCat}>
-            {sub_cat.map((e)=>
-              (<TouchableOpacity
-                onPress={()=>navigate('ListCatScr',{idCat,name_cat,sub_cat,id_subCat:e.id, name_subCat:e.name})}
-                key={e.id}
-                style={listCatOver}>
-                  <Text style={colorText}>{e.name}</Text>
-              </TouchableOpacity>))
-            }
+            <FlatList
+               keyExtractor={item => item.id}
+               data={sub_cat}
+               renderItem={({item}) => (
+                 <TouchableOpacity
+                 onPress={()=>{navigate('ListCatScr',{idCat,name_cat,sub_cat,id_subCat:item.id, name_subCat:item.name});
+                  this.setState({showCat:!this.state.showCat});
+               }}
+                 style={listCatOver}>
+                   <Text style={colorText}>{item.name}</Text>
+               </TouchableOpacity>
+            )} />
+
             </View>
 
         </View>
 
-
         <MapView
             style={{flex:1}}
             region={ this.state.curLocation }
+            onLoad={()=>this.getLoc()}
           >
           {this.state.markers.map((marker,index) => {
-            if(marker.lat===undefined && marker.lng===undefined)
-            {marker.lat = this.state.curLocation.latitude;marker.lng = this.state.curLocation.longitude;}
             return (
             <MapView.Marker
               key={marker.id}
@@ -151,14 +160,13 @@ export default class CategoryScreen extends Component {
                 latitude: Number(marker.lat),
                 longitude: Number(marker.lng),
               }}
-              image={logoMap}
               title={marker.name}
               description={`${marker.address}${', '}${marker._district.name}${', '}${marker._city.name}${', '}${marker._country.name}`}
               zoomEnabled
-            />
-
+            >
+            <Image source={{uri:`${global.url_media}${marker._category_type.marker}`}} style={{width:48,height:54}} />
+            </MapView.Marker>
           )
-          console.log('markerMap',marker.lat,',',marker.lng);
         })}
 
           <MapView.Marker

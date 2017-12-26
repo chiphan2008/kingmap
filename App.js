@@ -7,6 +7,8 @@ import { StackNavigator,TabNavigator,Animated, } from 'react-navigation';
 //import util from 'util';
 import HomeTab from './component/main/home/HomeTab';
 import LocationTab from './component/main/location/LocationTab';
+import ListLocation from './component/main/location/ListLocation';
+import SelectCountry from './component/main/location/SelectCountry';
 import DistributeTab from './component/main/location/DistributeTab';
 import NotifyTab from './component/main/notify/NotifyTab';
 import PersonalTab from './component/main/personal/PersonalTab';
@@ -54,52 +56,35 @@ const styles = StyleSheet.create({
   },
 });
 
-const AdvTab = {
-      LocationT: {
-        screen: LocationTab,
-        navigationOptions: {
-          tabBarLabel: 'Location',
-          tabBarIcon: ({ tintColor }) => (
-            <Image source={locationIC} style={[styles.icon, {tintColor}]} />
-          ),
-        },
-      },
-      NotifyT: {
-        screen: NotifyTab,
-        navigationOptions: {
-          tabBarLabel: 'Notification',
-          tabBarIcon: ({ tintColor }) => (
-            <Image source={notifyIC} style={[styles.icon, {tintColor}]} />
-          ),
-        },
-      },
-      PersonalT: {
-        screen: PersonalTab,
-        navigationOptions: {
-          tabBarLabel: 'Personal',
-          tabBarIcon: ({ tintColor }) => (
-            <Image source={personalIC} style={[styles.icon, {tintColor}]} />
-          ),
-          style : {
-            borderBottomWidth:0,
-          },
-        },
-      },
+const HomeScreen = StackNavigator({
+  HomeTabs: { screen: HomeTab },
+  CatScr: { screen: CategoryScreen },
+  ListCatScr: { screen: ListCategory },
+  OtherCatScr: { screen: DistributeTab },
+},{
+  headerMode: 'none',
+});
 
-}
+const LocationScreen = StackNavigator({
+  LocTab: { screen: LocationTab },
+  ListLocScr: { screen: ListLocation },
+},{
+  headerMode: 'none',
+});
+
 const RootTabs = TabNavigator({
   HomeT: {
-    screen: HomeTab,
+    screen: HomeScreen,
     navigationOptions: {
       tabBarLabel: 'Home',
       tabBarIcon: ({ tintColor }) => (
         <Image source={homeIC} style={[styles.icon, {tintColor}]} />
       ),
-      tabBarVisible:true,
+
     },
   },
   LocationT: {
-    screen: LocationTab,//LocationTab,//,DistributeTab
+    screen: LocationScreen,//LocationTab,//,DistributeTab
     navigationOptions: {
       tabBarLabel: 'Location',
       tabBarIcon: ({ tintColor }) => (
@@ -107,78 +92,27 @@ const RootTabs = TabNavigator({
       ),
     },
   },
-  NotifyT: AdvTab.NotifyT,
-  PersonalT: AdvTab.PersonalT,
-
-}, {
-  //initialRouteName:'LocationT',
-  tabBarPosition: 'bottom',
-  tabBarSelected: 'Home',
-  tabBarOptions: {
-    showLabel:true,
-    showIcon:true,
-    activeTintColor: '#D0021B',
-    inactiveTintColor: '#777E8A',
-    activeBackgroundColor:'#FFFEFF',
-    borderBottomWidth: 0,
-    style : {
-        backgroundColor:'#FFFEFF',
-    },
-    indicatorStyle: {
-        backgroundColor: 'transparent',
-    },
-  },
-});
-
-const CatTabs = TabNavigator({
-  HomeT: {
-    screen: CategoryScreen,
+  NotifyT: {
+    screen: NotifyTab,
     navigationOptions: {
-      tabBarLabel: 'Home',
+      tabBarLabel: 'Notification',
       tabBarIcon: ({ tintColor }) => (
-        <Image source={homeIC} style={[styles.icon, {tintColor}]} />
+        <Image source={notifyIC} style={[styles.icon, {tintColor}]} />
       ),
-
     },
   },
-  LocationT: AdvTab.LocationT,
-  NotifyT: AdvTab.NotifyT,
-  PersonalT: AdvTab.PersonalT,
-
-}, {
-  //initialRouteName:'LocationT',
-  tabBarPosition: 'bottom',
-  tabBarSelected: 'Home',
-  tabBarOptions: {
-    showLabel:true,
-    showIcon:true,
-    activeTintColor: '#D0021B',
-    inactiveTintColor: '#777E8A',
-    activeBackgroundColor:'#FFFEFF',
-    borderBottomWidth: 0,
-    style : {
-        backgroundColor:'#FFFEFF',
-    },
-    indicatorStyle: {
-        backgroundColor: 'transparent',
-    },
-  },
-});
-
-const ListCatTabs = TabNavigator({
-  HomeT: {
-    screen: ListCategory,
+  PersonalT: {
+    screen: PersonalTab,
     navigationOptions: {
-      tabBarLabel: 'Home',
+      tabBarLabel: 'Personal',
       tabBarIcon: ({ tintColor }) => (
-        <Image source={homeIC} style={[styles.icon, {tintColor}]} />
+        <Image source={personalIC} style={[styles.icon, {tintColor}]} />
       ),
-
+      style : {
+        borderBottomWidth:0,
+      },
     },
   },
-  LocationT: AdvTab.LocationT,
-  NotifyT: AdvTab.NotifyT,
-  PersonalT: AdvTab.PersonalT,
 
 }, {
   //initialRouteName:'LocationT',
@@ -200,76 +134,28 @@ const ListCatTabs = TabNavigator({
   },
 });
 
-const OtherCatTabs = TabNavigator({
-  HomeT: {
-    screen: DistributeTab,
-    navigationOptions: {
-      tabBarLabel: 'Home',
-      tabBarIcon: ({ tintColor }) => (
-        <Image source={homeIC} style={[styles.icon, {tintColor}]} />
-      ),
 
-    },
-    transitionConfig: () => ({
-     transitionSpec: {
-       duration: 300,
-       easing: Easing.out(Easing.poly(4)),
-       timing: Animated.timing,
-     },
-   }),
-  },
-  LocationT: AdvTab.LocationT,
-  NotifyT: AdvTab.NotifyT,
-  PersonalT: AdvTab.PersonalT,
+const initApp =  AsyncStorage.getItem('@LocationKey:key');
 
-}, {
-  //initialRouteName:'LocationT',
-  tabBarPosition: 'bottom',
-  tabBarSelected: 'Home',
-  tabBarOptions: {
-    showLabel:true,
-    showIcon:true,
-    activeTintColor: '#D0021B',
-    inactiveTintColor: '#777E8A',
-    activeBackgroundColor:'#FFFEFF',
-    borderBottomWidth: 0,
-    style : {
-        backgroundColor:'#FFFEFF',
-    },
-    indicatorStyle: {
-        backgroundColor: 'transparent',
-    },
-  },
-});
-state={
-  initApp:false,
-}
-checkLocation().then((e)=>{setState({initApp:e})});
-//checkLocation().then((e)=>state.initApp=e);
-  const App = StackNavigator(
-
-    {
-    IntroSrc: {
-      screen: FadeView,
-    },
-    MainScr: {
-      screen: RootTabs,
-    },
-    CatScr: {
-      screen: CatTabs,
-    },
-    ListCatScr: {
-      screen: ListCatTabs,
-    },
-    OtherCatScr: {
-      screen: OtherCatTabs,
-    },
-
-  },
+const App = StackNavigator(
   {
-    headerMode: 'none',
-    initialRouteName: this.state.initApp ? 'MainScr' : 'IntroSrc',
-    //initialRouteParams: { someParam: 'Bonjour' }
-  });
+  IntroSrc: {
+    screen: FadeView,
+  },
+  MainScr: {
+    screen: RootTabs,
+  },
 
-  export default App;
+  SelectCountryScr: {
+    screen: SelectCountry,
+  },
+
+
+},
+{
+  headerMode: 'none',
+  initialRouteName: initApp!==null ? 'MainScr' : 'IntroSrc',
+  //initialRouteParams: { someParam: 'Bonjour' }
+});
+
+export default App ;

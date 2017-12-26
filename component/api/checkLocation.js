@@ -2,12 +2,11 @@ import { AsyncStorage } from 'react-native';
 
 const checkLocation = async () => {
 
-  const country = await AsyncStorage.getItem('@CountryLocationKey:key');
-  const city = await AsyncStorage.getItem('@CityLocationKey:key');
-  if (country === null && city === null) {
-      return false;
+  const value = await AsyncStorage.getItem('@LocationKey:key');
+  if (value !== null) {
+      return JSON.parse(value);
   }
-  return true;
+  return value;
 
 };
 
