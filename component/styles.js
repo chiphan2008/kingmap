@@ -176,10 +176,16 @@ module.exports = {
     shadowColor: '#999',
     shadowOpacity: .2,
     width:50,height:50,
-
   },
   popover : {
     top: Platform.OS ==='ios' ? 55 :40,
+    alignItems:'center',
+    position:'absolute',
+    width,
+    zIndex:5,
+  },
+  popoverLoc : {
+    top: 130,
     alignItems:'center',
     position:'absolute',
     width,
@@ -197,6 +203,7 @@ module.exports = {
   colorNumPP :{fontWeight: 'bold',color:'#2F353F'},
   imgUp:{width: 14,height: 7,top:1,position:'absolute'},
   imgUpInfo :{right:58},
+  imgUpLoc :{left:58},
   imgUpShare :{right:20},
   imgMargin: {margin:10},
   listCatOver:{paddingRight:20,paddingBottom:20,paddingLeft:20,},
@@ -206,7 +213,7 @@ module.exports = {
   overLayoutShare:{
     backgroundColor:'#fff',width: 130,borderRadius:4,overflow:'hidden',top:7,right:10,paddingBottom:Platform.OS==='ios' ? 0 : 10,
   },
-  overLayout:{backgroundColor:'#fff',width: width-20,borderRadius:4,overflow:'hidden',top:7},
+  overLayout:{backgroundColor:'#fff',width: width-20,borderRadius:6,overflow:'hidden',top:7},
   overLayoutCat:{
       backgroundColor:'#fff',
       width: 190,

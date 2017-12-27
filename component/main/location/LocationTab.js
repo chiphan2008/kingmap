@@ -49,7 +49,7 @@ export default class Hometab extends Component {
   }
 
   render() {
-    const {navigate} = this.props.navigation;
+    const {navigate, goBack} = this.props.navigation;
     //console.log("this.props.DistributeTab=",util.inspect(this.props.navigation,false,null));
     const {
       container,
@@ -64,7 +64,7 @@ export default class Hometab extends Component {
 
       <View style={headCatStyle}>
           <View style={headContent}>
-              <TouchableOpacity onPress={()=>this.props.navigation.goBack()}>
+              <TouchableOpacity onPress={()=>goBack()}>
               <Image source={closeIC} style={{width:20, height:20,marginTop:5}} />
               </TouchableOpacity>
               <TouchableOpacity

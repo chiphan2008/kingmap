@@ -165,10 +165,12 @@ export default class HomeTab extends Component {
 
     return (
       <View style={container} >
+
       <Image source={bgMap} style={bgImg} />
         <View style={headStyle}>
             <View style={headContent}>
             <Select
+                  onClick={()=> this.setState({showInfo:false,showShare:false}) }
                   onSelect = {this.onSelectLang.bind(this)}
                   defaultText  = {this.state.selectLang.labelLang}
                   style = {selectBox}
@@ -187,7 +189,7 @@ export default class HomeTab extends Component {
                 <Image source={logoTop} style={imgLogoTop} />
             </TouchableOpacity>
                 <View style={wrapIcRight}>
-                  <TouchableOpacity onPress={()=> this.setState({showInfo:!this.state.showInfo,showShare:false}) } >
+                  <TouchableOpacity  onPress={()=> this.setState({showInfo:!this.state.showInfo,showShare:false}) } >
                     <Image source={infoIC} style={imgInfo} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={()=> this.setState({showShare:!this.state.showShare,showInfo:false}) } >
@@ -288,8 +290,8 @@ export default class HomeTab extends Component {
         <TouchableOpacity style={plusStyle}>
             <Image source={plusIC} style={imgPlusStyle} />
         </TouchableOpacity>
-        <View style={[popover, this.state.showInfo ? show : hide]}>
 
+        <View style={[popover, this.state.showInfo ? show : hide]}>
           <Image style={[imgUp,imgUpInfo]} source={upDD} />
 
           <View style={overLayout}>

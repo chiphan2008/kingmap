@@ -53,9 +53,7 @@ export default class CityScreen extends Component {
     //console.log('this.state.slCountry.id',this.state.slCountry.id,this.state.slCity.id)
     if(this.state.slCountry.id !==-1 && this.state.slCity.id !==-1){
       AsyncStorage.setItem('@LocationKey:key', JSON.stringify({
-                nameCountry:this.state.slCountry.name,
                 idCountry:this.state.slCountry.id,
-                nameCity:this.state.slCity.name,
                 idCity:this.state.slCity.id,
             }));
       this.props.navigation.navigate('MainScr');

@@ -8,7 +8,6 @@ import { StackNavigator,TabNavigator,Animated, } from 'react-navigation';
 import HomeTab from './component/main/home/HomeTab';
 import LocationTab from './component/main/location/LocationTab';
 import ListLocation from './component/main/location/ListLocation';
-import SelectCountry from './component/main/location/SelectCountry';
 import DistributeTab from './component/main/location/DistributeTab';
 import NotifyTab from './component/main/notify/NotifyTab';
 import PersonalTab from './component/main/personal/PersonalTab';
@@ -23,6 +22,9 @@ import FadeView from './component/FadeView';
 import MainScreen from './component/main/MainScreen';
 import CategoryScreen from './component/main/home/CategoryScreen';
 import ListCategory from './component/main/home/ListCategory';
+
+import SelectLocation from './component/main/location/SelectLocation';
+
 import LoginScreen from './component/page_user/LoginScreen';
 import SignUpScreen from './component/page_user/SignUpScreen';
 import ForgotPasswordScreen from './component/page_user/ForgotPasswordScreen';
@@ -70,6 +72,7 @@ const LocationScreen = StackNavigator({
   ListLocScr: { screen: ListLocation },
 },{
   headerMode: 'none',
+
 });
 
 const RootTabs = TabNavigator({
@@ -80,7 +83,6 @@ const RootTabs = TabNavigator({
       tabBarIcon: ({ tintColor }) => (
         <Image source={homeIC} style={[styles.icon, {tintColor}]} />
       ),
-
     },
   },
   LocationT: {
@@ -90,6 +92,7 @@ const RootTabs = TabNavigator({
       tabBarIcon: ({ tintColor }) => (
         <Image source={locationIC} style={[styles.icon, {tintColor}]} />
       ),
+      tabBarVisible:true,
     },
   },
   NotifyT: {
@@ -115,8 +118,10 @@ const RootTabs = TabNavigator({
   },
 
 }, {
-  //initialRouteName:'LocationT',
+  initialRouteName:'LocationT',
   tabBarPosition: 'bottom',
+  animationEnabled: false,
+  swipeEnabled: true,
   tabBarSelected: 'Home',
   tabBarOptions: {
     showLabel:true,
@@ -145,11 +150,6 @@ const App = StackNavigator(
   MainScr: {
     screen: RootTabs,
   },
-
-  SelectCountryScr: {
-    screen: SelectCountry,
-  },
-
 
 },
 {
