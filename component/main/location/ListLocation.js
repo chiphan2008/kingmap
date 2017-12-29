@@ -18,6 +18,7 @@ import sortDownIC from '../../../src/icon/ic-sort-down.png';
 import searchIC from '../../../src/icon/ic-gray/ic-search.png';
 import likeIC from '../../../src/icon/ic-like.png';
 import favoriteIC from '../../../src/icon/ic-favorite.png';
+import checkIC from '../../../src/icon/ic-green/ic-check.png';
 
 
 export default class ListLocation extends Component {
@@ -30,12 +31,24 @@ export default class ListLocation extends Component {
       valueLoc : 0,
       valueCat : 0,
       valueSer : 0,
-      showLoc:false,
       curLocation : {
         latlng:'',
       },
-      idDist:'',
+      showLoc:false,
       listData:[],
+      listSubCat:{
+        arr:[],
+        check:'',
+        showList:false,
+      },
+      listSerItem:{
+        arr:[],
+        check:'',
+        showList:false,
+      },
+      idDist:null,
+      id_sub:null,
+      id_serv:null,
       markers:[{
         id : 1,
         lat: 10.780843591000904,
@@ -54,14 +67,27 @@ export default class ListLocation extends Component {
   getCategory(idcat,loc){
     getApi(global.url+'content-by-category?category='+idcat+'&location='+loc)
     .then(arrData => {
-      //console.log('parseFloat(marker.lat)',arrData.data)
         this.setState({ listData: arrData.data });
     })
     .catch(err => console.log(err));
   }
 
-  getContentByDist(id_district,id_cat){
-    getApi(`${global.url}${'search-content?district='}${id_district}${'&category='}${id_cat}`)
+  getContentByDist(id_district,id_sub,id_serv){
+    const id_cat = this.props.navigation.state.params.idCat;
+    var url = `${global.url}${'search-content?category='}${id_cat}`;
+    if(id_district===null){
+      url += `${'&location='}${this.state.curLocation.latlng}`;
+    }else {
+      url += `${'&district='}${id_district}`;
+    }
+
+    if(id_sub!==null)      url += `${'&subcategory='}${id_sub}`;
+    if(id_serv!==null){
+      this.setState({id_serv: id_serv});
+      url += `${'&service='}${id_serv}`;
+    }
+    //console.log('-----url-----',url);
+    getApi(url)
     .then(arrData => {
         this.setState({ listData: arrData.data });
     })
@@ -70,25 +96,23 @@ export default class ListLocation extends Component {
 
   saveLocation(){
     checkLocation().then((e)=>{
-      this.getContentByDist(e.idDist,this.props.navigation.state.params.idCat);
+      this.getContentByDist(e.idDist,this.state.id_sub,this.state.id_serv);
       this.setState({showLoc:!this.state.showLoc,idDist:e.idDist});
     });
   }
+
   componentDidMount() {
     navigator.geolocation.getCurrentPosition((position) => {
             const latlng = `${position.coords.latitude}${','}${position.coords.longitude}`;
             const id = this.props.navigation.state.params.idCat;
-
             this.getCategory(id,latlng)
             this.setState({
               curLocation : {
                 latlng:latlng,
               }
             });
-            //console.log('this.props.navigation.state.params',this.props.navigation.state.params.idCat);
            },
            (error) => {
-            //console.log(error)
           },
           {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
     );
@@ -96,6 +120,7 @@ export default class ListLocation extends Component {
 
   render() {
     const {navigate,setParams} = this.props.navigation;
+    const {idCat,sub_cat,serv_items,lang} = this.props.navigation.state.params;
     //console.log("this.props.ListLocation=",util.inspect(this.props.navigation,false,null));
     const {
       container,
@@ -104,7 +129,7 @@ export default class ListLocation extends Component {
       selectBoxLoc,optionListLoc,OptionItemLoc,
       wrapListLoc,flatItemLoc,imgFlatItem,wrapFlatRight,
       txtTitleOverCat,txtAddrOverCat,flatlistItemCat,wrapInfoOver,
-      imgUp,imgUpLoc,popoverLoc,overLayout
+      imgUp,imgUpLoc,imgUpSubCat,imgUpService,popoverLoc,overLayout,imgInfo,overLayoutLoc,shadown,overLayoutSer,listCatOver,listOverService,colorText
     } = styles;
 
     return (
@@ -119,18 +144,22 @@ export default class ListLocation extends Component {
 
                 <View style={filterFrame}>
                 <TouchableOpacity
-                  onPress={()=>this.setState({showLoc:!this.state.showLoc})}
+                  onPress={()=>this.setState({ showLoc:!this.state.showLoc,listSubCat:{showList:false},listSerItem:{showList:false}, })}
                   style={selectBoxLoc}>
                     <Text style={{color:'#303B50'}}>{this.state.labelLoc}</Text>
                     <Image source={sortDownIC} style={{width:12,height:13,marginTop:3,}} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {selectBoxLoc}>
+                <TouchableOpacity
+                  onPress={()=>this.setState({ listSubCat:{showList:!this.state.listSubCat.showList},listSerItem:{showList:false}, showLoc:false})}
+                  style = {selectBoxLoc}>
                     <Text style={{color:'#303B50'}}>{this.state.labelCat}</Text>
                     <Image source={sortDownIC} style={{width:12,height:13,marginTop:3,}} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {selectBoxLoc}>
+                <TouchableOpacity
+                onPress={()=>this.setState({ listSubCat:{showList:false},listSerItem:{showList:!this.state.listSerItem.showList}, showLoc:false})}
+                style = {selectBoxLoc}>
                     <Text style={{color:'#303B50'}}>{this.state.labelSer}</Text>
                     <Image source={sortDownIC} style={{width:12,height:13,marginTop:3,}} />
                 </TouchableOpacity>
@@ -178,9 +207,75 @@ export default class ListLocation extends Component {
 
         <View style={[popoverLoc, this.state.showLoc ? show : hide]}>
           <Image style={[imgUp,imgUpLoc]} source={upDD} />
-          <View style={overLayout}>
+          <View style={[overLayout,shadown]}>
               <SelectLocation saveLocation={this.saveLocation.bind(this)} />
           </View>
+        </View>
+
+        <View style={[popoverLoc, this.state.listSubCat.showList ? show : hide]}>
+        <Image style={[imgUp,imgUpSubCat]} source={upDD} />
+            <View style={[overLayoutLoc,shadown]}>
+
+            <FlatList
+               keyExtractor={item => item.id}
+               data={sub_cat}
+               renderItem={({item}) => (
+                 <TouchableOpacity
+                 onPress={()=>{
+                   this.getContentByDist(this.state.idDist,item.id,this.state.id_serv);
+                   this.setState({listSubCat:{showList:!this.state.listSubCat.showList},id_sub:item.id});
+               }}
+                 style={listCatOver}>
+                   <Text style={colorText}>{item.name}</Text>
+               </TouchableOpacity>
+            )} />
+
+            <TouchableOpacity
+                onPress={()=>{
+                  this.getContentByDist(this.state.idDist,null,this.state.id_serv);
+                  this.setState({listSubCat:{showList:!this.state.listSubCat.showList},id_sub:null});
+              }}
+                style={listCatOver}>
+                  <Text style={colorText}>Tất cả</Text>
+          </TouchableOpacity>
+
+            </View>
+        </View>
+
+        <View style={[popoverLoc, this.state.listSerItem.showList ? show : hide]}>
+        <Image style={[imgUp,imgUpService]} source={upDD} />
+            <View style={[overLayout,shadown]}>
+
+            <FlatList
+               keyExtractor={item => item.id}
+               data={serv_items}
+               renderItem={({item}) => (
+              <View style={listOverService}>
+              <TouchableOpacity
+                 onPress={()=>{
+                  let idServ = this.state.id_serv===null ? item.id : `${this.state.id_serv}${','}${item.id}`;
+                  this.getContentByDist(this.state.idDist,this.state.id_sub,idServ);
+                  }}
+                  style={{alignItems:'center',justifyContent:'space-between',flexDirection:'row',}}
+                >
+                   <Text style={colorText}>{item.name}</Text>
+                   <Image style={[imgInfo, `${this.state.id_serv}`.includes(item.id) ? show : hide]} source={checkIC}/>
+               </TouchableOpacity>
+               </View>
+            )} />
+
+            <View style={listOverService}>
+            <TouchableOpacity
+               onPress={()=>{
+                this.getContentByDist(this.state.idDist,this.state.id_sub,null);
+                this.setState({listSerItem:{showList:!this.state.listSerItem.showList},id_serv:null});
+                }}
+              >
+                 <Text style={colorText}>Tất cả</Text>
+             </TouchableOpacity>
+             </View>
+
+            </View>
         </View>
 
       </View>

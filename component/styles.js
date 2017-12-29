@@ -75,11 +75,13 @@ module.exports = {
   },
   wrapDistribute:{
     width:width-20,borderRadius:5,backgroundColor:'#fff',minHeight:height,
-    shadowOffset:{  width: 1,  height: 1,  },
     flexDirection:'row',
+    paddingBottom: Platform.OS==='ios' ? 80 : 40,
+  },
+  shadown:{
+    shadowOffset:{  width: 1,  height: 1,  },
     shadowColor: '#999',
     shadowOpacity: .5,
-    paddingBottom:80,
   },
   flatItem:{
     alignItems:'center',
@@ -198,22 +200,32 @@ module.exports = {
     width,
     zIndex:5,
   },
+  colorWhite:{color:'#fff'},
   colorTextPP :{color:'#B8BBC0'},
   colorText :{color:'#303B50',fontSize:17},
   colorNumPP :{fontWeight: 'bold',color:'#2F353F'},
   imgUp:{width: 14,height: 7,top:1,position:'absolute'},
   imgUpInfo :{right:58},
   imgUpLoc :{left:58},
+  imgUpService :{right:58},
+  imgUpSubCat :{alignSelf:'center'},
   imgUpShare :{right:20},
   imgMargin: {margin:10},
   listCatOver:{paddingRight:20,paddingBottom:20,paddingLeft:20,},
   listOver:{alignItems:'center',flexDirection:'row',padding:10,borderBottomColor:'#EEEDEE', borderBottomWidth:1,},
   listOverShare:{alignItems:'center',flexDirection:'row',paddingLeft:5},
-
+  listOverService:{
+      padding:15,
+      borderBottomColor:'#EEEDEE',
+      borderBottomWidth:1,
+  },
   overLayoutShare:{
     backgroundColor:'#fff',width: 130,borderRadius:4,overflow:'hidden',top:7,right:10,paddingBottom:Platform.OS==='ios' ? 0 : 10,
   },
-  overLayout:{backgroundColor:'#fff',width: width-20,borderRadius:6,overflow:'hidden',top:7},
+  overLayout:{
+    backgroundColor:'#fff',width: width-20,borderRadius:6,overflow:'hidden',top:7,
+    maxHeight:Platform.OS ==='ios' ? 400 :430,
+  },
   overLayoutCat:{
       backgroundColor:'#fff',
       width: 190,
@@ -223,9 +235,20 @@ module.exports = {
       paddingTop:20,
       borderColor:'#E1E7EC',
       zIndex:4,
-      shadowOffset:{  width: 2,  height: 2,  },
-      shadowColor: '#ddd',
-      shadowOpacity: .8,
+
+  },
+  overLayoutLoc:{
+      backgroundColor:'#fff',
+      width: 190,
+      minHeight:50,
+      maxHeight: Platform.OS ==='ios' ? 400 : 500,
+      top: 7,
+      paddingTop:20,
+      borderColor:'#E1E7EC',
+      zIndex:4,
+  },
+  overLayoutSer:{
+      alignSelf:'flex-end',right:10
   },
   catInfoOver:{padding:15,bottom:0,zIndex:6,backgroundColor:'#fff',width,flexDirection:'row'},
   wrapInfoOver:{flex:1,flexWrap: 'wrap',justifyContent:'space-between'},

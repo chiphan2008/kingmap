@@ -103,7 +103,7 @@ export default class CategoryScreen extends Component {
     const {
       container,
       headCatStyle, headContent,wrapIcRight,plusStyle,imgPlusStyle,
-      popover,show,hide,overLayoutCat,colorText,listCatOver,
+      popover,show,hide,overLayoutCat,shadown,colorText,listCatOver,
       wrapContent,leftContent,rightContent,middleContent,imgContent,labelCat,
       imgFlatItem,catInfoOver,txtTitleOver,txtAddrOver,wrapInfoOver,
     } = styles;
@@ -129,7 +129,7 @@ export default class CategoryScreen extends Component {
         </View>
 
         <View style={[popover, this.state.showCat ? show : hide]}>
-            <View style={overLayoutCat}>
+            <View style={[overLayoutCat,shadown]}>
             <FlatList
                keyExtractor={item => item.id}
                data={sub_cat}
@@ -142,7 +142,6 @@ export default class CategoryScreen extends Component {
                    <Text style={colorText}>{item.name}</Text>
                </TouchableOpacity>
             )} />
-
             </View>
 
         </View>

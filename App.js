@@ -19,7 +19,7 @@ import personalIC from './src/icon/ic-home/ic-personal.png';
 
 // import screen
 import FadeView from './component/FadeView';
-import MainScreen from './component/main/MainScreen';
+import DetailScreen from './component/main/DetailScreen';
 import CategoryScreen from './component/main/home/CategoryScreen';
 import ListCategory from './component/main/home/ListCategory';
 
@@ -150,11 +150,14 @@ const App = StackNavigator(
   MainScr: {
     screen: RootTabs,
   },
+  DetailScr: {
+    screen: DetailScreen,
+  },
 
 },
 {
   headerMode: 'none',
-  initialRouteName: initApp!==null ? 'MainScr' : 'IntroSrc',
+  initialRouteName: initApp!==null ? 'DetailScr' : 'IntroSrc',
   //initialRouteParams: { someParam: 'Bonjour' }
 });
 

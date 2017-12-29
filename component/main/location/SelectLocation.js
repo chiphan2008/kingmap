@@ -12,52 +12,6 @@ import arrowNextIC from '../../../src/icon/ic-arrow-next.png';
 import checkIC from '../../../src/icon/ic-green/ic-check.png';
 
 
-export class SelectCity extends Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      listCity:[],
-      showCheck:'',
-    };
-  }
-  getCity(id_country){
-    getApi(`${global.url}${'cities/'}${id_country}`)
-    .then(arrCity => {
-        this.setState({ listCity: arrCity.data });
-    })
-    .catch(err => console.log(err));
-  }
-  componentWillMount(){
-    this.getCity(this.props.idCity);
-  }
-  render() {
-    //const {naviagte} = this.props.navigation;
-    return (
-      <View style={styles.container}>
-        <FlatList
-             ListEmptyComponent={<Text>Loading ...</Text>}
-             data={this.state.listCity}
-             keyExtractor={item => item.id}
-             renderItem={({item}) => (
-               <View  style={styles.listItem}>
-               <TouchableOpacity
-                  style={{justifyContent:'space-between',flexDirection:'row',}}
-                  onPress={()=>this.setState({showCheckCity:item.id})}
-                >
-               <Text style={styles.txtItem} >{item.name}</Text>
-               <Image style={[styles.imgCheck,this.state.showCheckCity===item.id ? styles.show : styles.hide]} source={checkIC}/>
-               </TouchableOpacity>
-               </View>
-             )} />
-       <TouchableOpacity style={{padding:15,justifyContent:'center',alignItems:'center',backgroundColor:'#D0021B',}}>
-       <Text style={{color:'#fff',fontSize:17}}>Next</Text>
-       </TouchableOpacity>
-      </View>
-    );
-  }
-
-}
-
 export default class SelectLocation extends Component {
   constructor(props){
     super(props);

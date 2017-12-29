@@ -44,7 +44,7 @@ export default class Hometab extends Component {
     //console.log("this.props.DistributeTab=",util.inspect(this.props.navigation,false,null));
     const {
       container,
-      headCatStyle,headContent, wrapDistribute,wrapFilter,
+      headCatStyle,headContent, wrapDistribute,shadown, wrapFilter,
       show,hide,colorTextPP,colorNumPP,
       wrapListLoc,flatItem,flatlistItem,imgFlatItemLoc,wrapFlatRight
 
@@ -68,7 +68,7 @@ export default class Hometab extends Component {
           </View>
       </View>
 <View style={wrapFilter}>
-    <View style={wrapDistribute}>
+    <View style={[wrapDistribute,shadown]}>
     <View style={flatlistItem}>
         <FlatList
            numColumns={3}
