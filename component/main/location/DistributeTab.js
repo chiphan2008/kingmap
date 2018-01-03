@@ -74,7 +74,9 @@ export default class Hometab extends Component {
            numColumns={3}
            data={this.state.listCategory}
            renderItem={({item}) =>(
-             <TouchableOpacity style={flatItem}>
+             <TouchableOpacity
+             onPress={()=>navigate('ListLocScr',{idCat:item.id,sub_cat:item.sub_category,serv_items:item.service_items})}
+             style={flatItem}>
                  <Image style={imgFlatItemLoc} source={{uri:`${global.url_media}${item.image}`}} />
                  <Text>{item.name}</Text>
              </TouchableOpacity>

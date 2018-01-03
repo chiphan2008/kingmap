@@ -133,12 +133,16 @@ export default class CategoryScreen extends Component {
                data={this.state.listData}
                renderItem={({item}) => (
                   <View style={flatlistItemCat}>
-                      <TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={()=>navigate('DetailScr',{idContent:item.id,lat:item.lat,lng:item.lng})}
+                      >
                         <Image style={imgFlatItem} source={{uri:`${global.url_media}${item.avatar}`}} />
                       </TouchableOpacity>
                       <View style={wrapInfoOver}>
                         <View>
-                          <TouchableOpacity>
+                          <TouchableOpacity
+                          onPress={()=>navigate('DetailScr',{idContent:item.id,lat:item.lat,lng:item.lng})}
+                          >
                               <Text style={txtTitleOverCat} numberOfLines={2}>{item.name}</Text>
                           </TouchableOpacity>
                               <Text style={txtAddrOverCat} numberOfLines={1}>{`${item.address}${', '}${item._district.name}${', '}${item._city.name}${', '}${item._country.name}`}</Text>

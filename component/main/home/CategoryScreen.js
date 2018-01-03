@@ -58,7 +58,6 @@ export default class CategoryScreen extends Component {
           arrData.data = this.state.markers;
         else
           this.setState({showInfoOver:true});
-          //console.log('--arrData.data--',arrData.data);
 
         this.setState({ markers: arrData.data });
     })
@@ -91,6 +90,7 @@ export default class CategoryScreen extends Component {
           {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
     );
   }
+
   componentWillMount(){
    this.getLoc();
   }
@@ -147,9 +147,11 @@ export default class CategoryScreen extends Component {
         </View>
 
         <MapView
-            style={{flex:1}}
+            style={{flex:1,position:'relative',zIndex:1}}
             region={ this.state.curLocation }
             onLoad={()=>this.getLoc()}
+            rotateEnabled
+            
           >
           {this.state.markers.map((marker,index) => {
             return (
@@ -181,14 +183,18 @@ export default class CategoryScreen extends Component {
           </TouchableOpacity>
 
           <View style={[catInfoOver, this.state.showInfoOver ? show : hide ]}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={()=>navigate('DetailScr',{idContent:this.state.markers[0].id,lat:this.state.markers[0].lat,lng:this.state.markers[0].lng})}
+                >
                   <Image style={imgFlatItem} source={{uri:`${global.url_media}${this.state.markers[0].avatar}`}} />
                 </TouchableOpacity>
                 <View style={wrapInfoOver}>
-                    <TouchableOpacity>
-                        <Text style={txtTitleOver}>{this.state.markers[0].name}</Text>
+                    <TouchableOpacity
+                    onPress={()=>navigate('DetailScr',{idContent:this.state.markers[0].id,lat:this.state.markers[0].lat,lng:this.state.markers[0].lng})}
+                    >
+                        <Text numberOfLines={2} style={txtTitleOver}>{this.state.markers[0].name}</Text>
                     </TouchableOpacity>
-                        <Text style={txtAddrOver}>{this.state.markers[0].address}</Text>
+                        <Text numberOfLines={1} style={txtAddrOver}>{`${this.state.markers[0].address}${', '}${this.state.markers[0]._district.name}${', '}${this.state.markers[0]._city.name}`}</Text>
 
                 </View>
           </View>

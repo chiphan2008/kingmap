@@ -28,7 +28,6 @@ export default class CityScreen extends Component {
       },
     };
 
-
   }
 
   onSelectCountry(value, label) {
@@ -38,6 +37,7 @@ export default class CityScreen extends Component {
           id:value,
       }
     });
+    //console.log('idCountry',value);
     this.getCity(value);
   }
   onSelectCity(value, label) {
@@ -56,6 +56,17 @@ export default class CityScreen extends Component {
                 idCountry:this.state.slCountry.id,
                 idCity:this.state.slCity.id,
             }));
+      if(this.state.slCountry.id==1){
+        AsyncStorage.setItem('@MyLanguage:key',JSON.stringify({
+          valueLang:'vn',labelLang :'VIE'
+        }));
+      }else{
+        AsyncStorage.setItem('@MyLanguage:key',JSON.stringify({
+          valueLang:'en',labelLang :'ENG'
+        }));
+      }
+
+
       this.props.navigation.navigate('MainScr');
     }
   }
@@ -81,7 +92,7 @@ export default class CityScreen extends Component {
   }
 
   render() {
-
+    const { width, height } = Dimensions.get('window');
     //console.log("this.props.CityScreen=",util.inspect(this.props.navigation,false,null));
     const {
       container, imgLogo, title, wrapper,bgImg,
@@ -100,7 +111,7 @@ export default class CityScreen extends Component {
               <Image style={imgLogo} source={LogoHome} />
               <Text style={title}>COUNTRY/ CITY</Text>
               <Select
-                    onSelect = {()=>this.onSelectCountry.bind(this)}
+                    onSelect = {this.onSelectCountry.bind(this)}
                     defaultText  = {this.state.slCountry.name}
                     style = {[selectBox,selectBoxCountry]}
                     textStyle = {{color:'#5b89ab'}}
@@ -116,7 +127,7 @@ export default class CityScreen extends Component {
               </Select>
 
               <Select
-                    onSelect = {()=>this.onSelectCity.bind(this)}
+                    onSelect = {this.onSelectCity.bind(this)}
                     defaultText  = {this.state.slCity.name}
                     style = {[selectBox,selectBoxCity]}
                     textStyle = {{color:'#5b89ab'}}
@@ -152,6 +163,7 @@ const styles = StyleSheet.create({
   container: {
     width,
     height,
+    alignSelf: 'stretch',
   },
   bgImg : {
     width,
@@ -185,6 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: 15,
     paddingBottom: 15,
+    alignSelf: 'stretch',
   },
   selectBoxCountry : {
     marginBottom: 10,

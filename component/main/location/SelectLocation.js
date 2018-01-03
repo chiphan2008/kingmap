@@ -81,27 +81,23 @@ export default class SelectLocation extends Component {
                   <View  style={styles.listItem}>
                   <TouchableOpacity
                      style={{justifyContent:'space-between',flexDirection:'row',}}
-                     onPress={()=>this.setState({showCheckDistrict:item.id})}
+                     onPress={() => {
+
+                         AsyncStorage.setItem('@LocationKey:key', JSON.stringify({
+                                   idCountry:this.state.showCheckCountry,
+                                   idCity:this.state.showCheckCity,
+                                   idDist:item.id,
+                         }));
+                         this.props.saveLocation();
+
+                     }}
                    >
                   <Text style={styles.txtItem} >{item.name}</Text>
                   <Image style={[styles.imgCheck,this.state.showCheckDistrict===item.id ? styles.show : styles.hide]} source={checkIC}/>
                   </TouchableOpacity>
                   </View>
                 )} />
-          <TouchableOpacity
-            onPress={() => {
-              if(this.state.showCheckDistrict!==''){
-                AsyncStorage.setItem('@LocationKey:key', JSON.stringify({
-                          idCountry:this.state.showCheckCountry,
-                          idCity:this.state.showCheckCity,
-                          idDist:this.state.showCheckDistrict,
-                }));
-                this.props.saveLocation();
-              }
-            }}
-            style={{padding:15,paddingBottom:Platform.OS ==='ios' ? 15 : 25,justifyContent:'center',alignItems:'center',backgroundColor:'#D0021B',}}>
-          <Text style={{color:'#fff',fontSize:17}}>Save</Text>
-          </TouchableOpacity>
+          
          </View>
 
          <View style={[styles.container,this.state.showCountry ? styles.show : styles.hide]}>

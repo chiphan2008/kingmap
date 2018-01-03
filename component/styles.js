@@ -1,6 +1,9 @@
 import {Dimensions,Platform} from 'react-native';
 const {height, width} = Dimensions.get('window');
 
+const w = width>height ? width : height;
+const h = width>height ? height : width;
+
 module.exports = {
   container: {flex: 1,backgroundColor:'#F1F2F5'},
   bgImg : {
@@ -26,7 +29,7 @@ module.exports = {
   },
   selectBoxLoc:{
     backgroundColor:'#fff',
-    width:Platform.OS ==='ios' ? 100 : 130,
+    width:Platform.OS ==='ios' ? 100 : 110,
     borderRadius:4,
     borderColor:'#CED0D5',
     borderWidth:1,
@@ -230,9 +233,10 @@ module.exports = {
       backgroundColor:'#fff',
       width: 190,
       minHeight:50,
-      maxHeight: 500,
+      maxHeight: Platform.OS ==='ios' ? 480 : 490,
       top: Platform.OS==='ios' ? 10 : 25,
       paddingTop:20,
+      paddingBottom:Platform.OS ==='ios' ? 10 : 20,
       borderColor:'#E1E7EC',
       zIndex:4,
 
@@ -251,9 +255,9 @@ module.exports = {
       alignSelf:'flex-end',right:10
   },
   catInfoOver:{padding:15,bottom:0,zIndex:6,backgroundColor:'#fff',width,flexDirection:'row'},
-  wrapInfoOver:{flex:1,flexWrap: 'wrap',justifyContent:'space-between'},
+  wrapInfoOver:{flex:1,flexWrap: 'wrap'},
   txtTitleOver:{color:'#2F353F',fontSize:20,marginBottom:10,maxHeight:50,overflow:'hidden'},
-  txtAddrOver:{color:'#6587A8',fontSize:14,height:40,},
+  txtAddrOver:{color:'#6587A8',fontSize:14,overflow:'hidden',},
   show : { display: 'flex'},
   hide : { display: 'none'},
 

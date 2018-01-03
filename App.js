@@ -118,7 +118,7 @@ const RootTabs = TabNavigator({
   },
 
 }, {
-  initialRouteName:'LocationT',
+  //initialRouteName:'LocationT',
   tabBarPosition: 'bottom',
   animationEnabled: false,
   swipeEnabled: true,
@@ -138,10 +138,10 @@ const RootTabs = TabNavigator({
     },
   },
 });
-
-
-const initApp =  AsyncStorage.getItem('@LocationKey:key');
-
+state = { initApp:'undefined' }
+//checkLocation().then(e=>{this.setState({initApp:e})})
+//const initApp =  AsyncStorage.getItem('@LocationKey:key');
+//console.log('initApp',this.state.initApp);
 const App = StackNavigator(
   {
   IntroSrc: {
@@ -157,7 +157,7 @@ const App = StackNavigator(
 },
 {
   headerMode: 'none',
-  initialRouteName: initApp!==null ? 'DetailScr' : 'IntroSrc',
+  initialRouteName: this.state.initApp!==null ?  'MainScr' : 'IntroSrc',
   //initialRouteParams: { someParam: 'Bonjour' }
 });
 

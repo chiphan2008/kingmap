@@ -106,7 +106,7 @@ export default class HomeTab extends Component {
   }
 
   onSelectLang(value, label) {
-    AsyncStorage.setItem('@MyLanguage:key',JSON.stringify({valueLang:value,labelLang :label}))
+    AsyncStorage.setItem('@MyLanguage:key',JSON.stringify({valueLang:value,labelLang :label}));
     value==='vn' ?  this.setState({lang : staticLang_vn}) : this.setState({lang : staticLang_en});
     this.getCategory(value)
     this.setState({
@@ -135,7 +135,7 @@ export default class HomeTab extends Component {
   componentWillMount() {
       this.getLang();
       this.getListStatus();
-      this.getCategory(this.state.selectLang.valueLang);
+      //this.getCategory(this.state.selectLang.valueLang);
   }
 
   componentDidMount() {
