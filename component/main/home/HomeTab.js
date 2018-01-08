@@ -2,7 +2,8 @@
 
 import React, { Component } from 'react';
 import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput,
-  TouchableOpacity,PermissionsAndroid, AsyncStorage } from 'react-native';
+  Alert,TouchableOpacity,PermissionsAndroid, AsyncStorage } from 'react-native';
+import RNSettings from 'react-native-settings';
 const {height, width} = Dimensions.get('window');
 //import SvgUri from 'react-native-svg-uri';
 //import NumberFormat from 'react-number-format';
@@ -10,6 +11,7 @@ const {height, width} = Dimensions.get('window');
 import util from 'util';
 import getApi from '../../api/getApi';
 import getLanguage from '../../api/getLanguage';
+import accessLocation from '../../api/accessLocation';
 //import requestLocationPermission from '../../api/accessLocation';
 import global from '../../global';
 import styles from '../../styles.js';
@@ -33,18 +35,7 @@ import googleIC from '../../../src/icon/ic-home/ic-google.png';
 import twitterIC from '../../../src/icon/ic-home/ic-twitter.png';
 
 import logoHome from '../../../src/icon/ic-home/Logo-home.png';
-//import hotelOval from '../../../src/icon/ic-home/Oval-hotel.png';
-//import bankOval from '../../../src/icon/ic-home/Oval-bank.png';
-//import foodOval from '../../../src/icon/ic-home/Oval-food.png';
-//import entertainmentOval from '../../../src/icon/ic-home/Oval-entertainment.png';
-//import coffeeOval from '../../../src/icon/ic-home/Oval-coffee.png';
-//import fashionOval from '../../../src/icon/ic-home/Oval-fashion.png';
-//import shopOval from '../../../src/icon/ic-home/Oval-shop.png';
-//import beautifulOval from '../../../src/icon/ic-home/Oval-beautiful.png';
-//import zooOval from '../../../src/icon/ic-home/Oval-zoo.png';
-//import oilOval from '../../../src/icon/ic-home/Oval-oil.png';
-//import lifenightOval from '../../../src/icon/ic-home/Oval-lifenight.png';
-//import hospitalOval from '../../../src/icon/ic-home/Oval-hospital.png';
+import hospitalOval from '../../../src/icon/ic-home/Oval-hospital.png';
 
 import {Select, Option} from "react-native-chooser";
 
@@ -86,7 +77,7 @@ export default class HomeTab extends Component {
 
     };
 
-
+    accessLocation();
     arrLang = [{name:'VIE',v:'vn'},{name:'ENG',v:'en'}];
   }
 
@@ -138,18 +129,6 @@ export default class HomeTab extends Component {
       //this.getCategory(this.state.selectLang.valueLang);
   }
 
-  componentDidMount() {
-    //console.log("componentDidMount=",util.inspect(PermissionsAndroid.request,false,null));
-    navigator.geolocation.getCurrentPosition(
-          (position) => {
-            //console.log(position);
-           },
-           (error) => {
-            //console.log(error)
-          },
-          {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
-    );
-  }
 
   render() {
     const {height, width} = Dimensions.get('window');

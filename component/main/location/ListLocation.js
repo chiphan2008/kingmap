@@ -9,6 +9,7 @@ const {height, width} = Dimensions.get('window');
 import util from 'util';
 import styles from '../../styles';
 import getApi from '../../api/getApi';
+import getLocationByIP from '../../api/getLocationByIP';
 import global from '../../global';
 import SelectLocation from '../../main/location/SelectLocation';
 import checkLocation from '../../api/checkLocation';
@@ -65,8 +66,10 @@ export default class ListLocation extends Component {
   }
 
   getCategory(idcat,loc){
+    //console.log('idcat,loc',idcat,loc);
     getApi(global.url+'content-by-category?category='+idcat+'&location='+loc)
     .then(arrData => {
+      //console.log('arrData',arrData);
         this.setState({ listData: arrData.data });
     })
     .catch(err => console.log(err));
@@ -102,10 +105,12 @@ export default class ListLocation extends Component {
   }
 
   componentDidMount() {
+    const id = this.props.navigation.state.params.idCat;
     navigator.geolocation.getCurrentPosition((position) => {
             const latlng = `${position.coords.latitude}${','}${position.coords.longitude}`;
-            const id = this.props.navigation.state.params.idCat;
-            this.getCategory(id,latlng)
+
+            //console.log('latlng',latlng);
+            this.getCategory(id,latlng);
             this.setState({
               curLocation : {
                 latlng:latlng,
@@ -113,8 +118,11 @@ export default class ListLocation extends Component {
             });
            },
            (error) => {
+             //console.log('error',id);
+             getLocationByIP().then(e => this.getCategory(id,`${e.latitude}${','}${e.longitude}`));
+             //console.log('ip',ip.latitude);
           },
-          {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
+          {enableHighAccuracy: true, timeout: 5000, maximumAge: 5000}
     );
   }
 

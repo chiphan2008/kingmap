@@ -20,6 +20,7 @@ import personalIC from './src/icon/ic-home/ic-personal.png';
 // import screen
 import FadeView from './component/FadeView';
 import DetailScreen from './component/main/DetailScreen';
+import ListImageContent from './component/main/ListImageContent';
 import CategoryScreen from './component/main/home/CategoryScreen';
 import ListCategory from './component/main/home/ListCategory';
 
@@ -31,22 +32,10 @@ import ForgotPasswordScreen from './component/page_user/ForgotPasswordScreen';
 import VerifyAccountScreen from './component/page_user/VerifyAccountScreen';
 import checkLocation from './component/api/checkLocation';
 import getApiKey from './component/api/getApiKey';
-// const auth_key = {grant_type:'client_credentials',client_id:1,client_secret:'NKbqe8ovfMetW8WYimVN7MtNHSsy6tCo6mm7WU9Y'};
-// const Authentication = ()=>{AsyncStorage.setItem('AuthKey', JSON.stringify(auth_key), () => {
-//     AsyncStorage.getItem('AuthKey', (err, result) => {
-//       return result;
-//
-//     });
-// });
-// }
-//AsyncStorage.removeItem('@AuthKey:key');
+
+//AsyncStorage.removeItem('@LocationKey:key');
 getApiKey();
 
-//
-// constructor(props){
-//   super(props);
-//   this.state = {expires_in:0,token_type:null,access_token:null};
-// }
 
 const styles = StyleSheet.create({
   container: {
@@ -126,6 +115,9 @@ const RootTabs = TabNavigator({
   tabBarOptions: {
     showLabel:true,
     showIcon:true,
+    labelStyle: {
+      fontSize: 11,
+    },
     activeTintColor: '#D0021B',
     inactiveTintColor: '#777E8A',
     activeBackgroundColor:'#FFFEFF',
@@ -138,27 +130,44 @@ const RootTabs = TabNavigator({
     },
   },
 });
-state = { initApp:'undefined' }
-//checkLocation().then(e=>{this.setState({initApp:e})})
-//const initApp =  AsyncStorage.getItem('@LocationKey:key');
-//console.log('initApp',this.state.initApp);
-const App = StackNavigator(
-  {
-  IntroSrc: {
-    screen: FadeView,
-  },
-  MainScr: {
-    screen: RootTabs,
-  },
-  DetailScr: {
-    screen: DetailScreen,
-  },
 
-},
-{
-  headerMode: 'none',
-  initialRouteName: this.state.initApp!==null ?  'MainScr' : 'IntroSrc',
-  //initialRouteParams: { someParam: 'Bonjour' }
-});
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initApp : false,
+    }
+  }
+  componentWillMount(){
+    checkLocation().then(e=>{
+      //console.log('e',e.idCountry);
+      if(e.idCountry!==undefined){
+        this.setState({initApp:true});
+      }
+    });
+  }
+  render(){
+    const RootNav = StackNavigator(
+      {
+      IntroSrc: {
+        screen: FadeView,
+      },
+      MainScr: {
+        screen: RootTabs,
+      },
+      DetailScr: {
+        screen: DetailScreen,
+      },
+      ListIMGScr: {
+        screen: ListImageContent,
+      },
 
-export default App ;
+    },
+    {
+      headerMode: 'none',
+      initialRouteName: this.state.initApp ? 'MainScr' : 'IntroSrc',
+    });
+
+    return (<RootNav />);
+  }
+} ;

@@ -5,6 +5,7 @@ import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput, Touchabl
 const {height, width} = Dimensions.get('window');
 import util from 'util';
 import getApi from '../../api/getApi';
+import getLocationByIP from '../../api/getLocationByIP';
 import global from '../../global';
 import arrTest from '../../arrTest';
 import styles from '../../styles';
@@ -21,22 +22,22 @@ export default class CategoryScreen extends Component {
     super(props);
     this.state = {
       curLocation:{
-        latitude:10.7818513,
-        longitude: 106.6769368,
-        lat:10.7818513,
-        lng: 106.6769368,
+        latitude:0,
+        longitude: 0,
+        lat:0,
+        lng: 0,
         altitude: 7,
-        latitudeDelta:  0.014422,
+        latitudeDelta:  0.044422,
         longitudeDelta: 0.011121,
-        latlng: '10.7808,106.6783',
+        latlng: '0,0',
       },
 
       showCat : false,
       showInfoOver : false,
       markers:[{
         id : 1,
-        lat: 10.780843591000904,
-        lng: 106.67830749999996,
+        lat: 0,
+        lng: 0,
         name: '',
         _district:{name:''},
         _city:{name:''},
@@ -51,6 +52,7 @@ export default class CategoryScreen extends Component {
   }
 
   getCategory(idcat,loc){
+    //console.log('idcat,loc',idcat,loc);
     getApi(global.url+'content-by-category?category='+idcat+'&location='+loc)
     .then(arrData => {
       //console.log('--arrData--',arrData.data)
@@ -65,11 +67,13 @@ export default class CategoryScreen extends Component {
   }
 
   getLoc(){
+    //console.log('getloc',this.props.navigation.state.params.idCat);
     navigator.geolocation.getCurrentPosition(
           (position) => {
+            const id = this.props.navigation.state.params.idCat;
             const latlng = `${position.coords.latitude}${','}${position.coords.longitude}`;
             //this.getCategory(this.props.navigation.state.params.idCat,this.state.curLocation.latlng);
-            this.getCategory(this.props.navigation.state.params.idCat,latlng);
+            this.getCategory(id,latlng);
             this.setState({
               curLocation : {
                 latitude:position.coords.latitude,
@@ -85,13 +89,27 @@ export default class CategoryScreen extends Component {
             //console.log('this.props.navigation.state.params',this.props.navigation.state.params.idCat);
            },
            (error) => {
-            //console.log(error)
+            getLocationByIP().then(e => {
+            this.getCategory(this.props.navigation.state.params.idCat,`${e.latitude}${','}${e.longitude}`);
+            this.setState({
+              curLocation : {
+                latitude:e.latitude,
+                longitude: e.longitude,
+                lat:e.latitude,
+                lng: e.longitude,
+                altitude: 7,
+                latitudeDelta:  0.044422,
+                longitudeDelta: 0.011121,
+                latlng:`${e.latitude}${','}${e.longitude}`,
+              }
+            });
+            });
           },
-          {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
+          {enableHighAccuracy: true, timeout: 5000, maximumAge: 5000}
     );
   }
 
-  componentWillMount(){
+  componentDidMount(){
    this.getLoc();
   }
 
@@ -151,7 +169,7 @@ export default class CategoryScreen extends Component {
             region={ this.state.curLocation }
             onLoad={()=>this.getLoc()}
             rotateEnabled
-            
+
           >
           {this.state.markers.map((marker,index) => {
             return (

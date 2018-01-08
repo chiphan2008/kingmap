@@ -33,6 +33,20 @@
       <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyCUNFe8ZC0csUZzlTHRQFPp7PjiAtQ6Z0M" />
+
+        <receiver android:name="io.rumors.reactnativesettings.receivers.GpsLocationReceiver">
+          <intent-filter>
+              <action android:name="android.location.PROVIDERS_CHANGED" />
+              <category android:name="android.intent.category.DEFAULT" />
+          </intent-filter>
+        </receiver>
+
+        <receiver android:enabled="true" android:name="io.rumors.reactnativesettings.receivers.AirplaneModeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.AIRPLANE_MODE"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

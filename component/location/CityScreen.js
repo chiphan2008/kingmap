@@ -5,6 +5,8 @@ import { Platform, View, Text, Image, Button, StyleSheet, Dimensions, TouchableO
 import {Select, Option} from "react-native-chooser";
 import util from 'util';
 import getApi from '../api/getApi';
+import checkLocation from '../api/checkLocation';
+
 import global from '../global';
 //import image
 import LogoHome from '../../src/icon/ic-home/Logo-home.png';
@@ -66,13 +68,13 @@ export default class CityScreen extends Component {
         }));
       }
 
-
       this.props.navigation.navigate('MainScr');
     }
   }
   getCountry(){
     getApi(`${global.url}${'countries'}`)
     .then(arrCountry => {
+      //console.log('arrCountry',arrCountry);
         this.setState({ listCountry: arrCountry.data });
     })
     .catch(err => console.log(err));
@@ -86,9 +88,13 @@ export default class CityScreen extends Component {
     })
     .catch(err => console.log(err));
   }
-  componentWillMount() {
-      // const idType = this.props.category.id;
-      this.getCountry();
+  componentWillMount(){
+    checkLocation().then(e=>{
+      //console.log('e.idCountry',e.idCountry);
+      if(e.idCountry===undefined){
+        this.getCountry();
+      }
+    });
   }
 
   render() {

@@ -68,6 +68,7 @@ export default class DetailScreen extends Component {
       activeSlide:0,
       showInfo : false,
       showShare : false,
+      showComments: -1,
     }
   }
   onSelectLang(value, label) {
@@ -81,22 +82,15 @@ export default class DetailScreen extends Component {
       //console.log('arrData',arrData);
         this.setState({
           listData: arrData.data,
-          region:{
-            latitude: parseFloat(arrData.data.content.lat),
-            longitude: parseFloat(arrData.data.content.lng),
-            altitude: 7,
-            latitudeDelta:  0.004422,
-            longitudeDelta: 0.001121,
-            latlng:`${arrData.data.content.lat}${','}${arrData.data.content.lng}`,
-          },
         });
-        //this.forceUpdate();
-        //console.log('getContent.listData');
+
     })
     .catch(err => console.log(err));
   }
   componentWillMount(){
-    console.log(this.props.navigation.state.params.lat);
+    this.getContent(this.props.navigation.state.params.idContent);
+  }
+  componentDidMount(){
     this.setState({
       region:{
         latitude: parseFloat(this.props.navigation.state.params.lat),
@@ -107,7 +101,6 @@ export default class DetailScreen extends Component {
         latlng:`${this.props.navigation.state.params.lat}${','}${this.props.navigation.state.params.lng}`,
       },
     });
-    this.getContent(this.props.navigation.state.params.idContent);
   }
   onRegionChange(region) {
     this.setState({ region });
@@ -125,6 +118,7 @@ export default class DetailScreen extends Component {
       wrapContentDetail,rowFlex,imgMail,marRight,colorContent,imgContentIC,imgCheckin,imgICLocation,imgICMail,
       rowFlexBottom,favIC,colorRed,spaceContent,rowFlexImg,colorBlack,wrapService,
       titleSpace,sizeTitle,imgSpace,widthHafl,txtAddrOver,colorText,txtComments,mrgTop,
+      width30,padLeft,
     } = styles;
 
     return (
@@ -181,7 +175,7 @@ export default class DetailScreen extends Component {
 
           <View style={rowFlex}>
             <Image style={[imgICLocation,marRight]} source={locationDarkIC} />
-            <Text style={colorContent}>{`${this.state.listData.content.address}${', '}${this.state.listData.content._district.name}${', '}${this.state.listData.content._city.name}`}</Text>
+            <Text numberOfLines={1} style={[colorContent,width30]}>{`${this.state.listData.content.address}${', '}${this.state.listData.content._district.name}${', '}${this.state.listData.content._city.name}`}</Text>
           </View>
 
           <View style={rowFlex}>
@@ -220,7 +214,13 @@ export default class DetailScreen extends Component {
       <View style={spaceContent}>
           <View style={titleSpace}>
               <Text style={[colorNumPP,sizeTitle]}>KHÔNG GIAN ({this.state.listData.image_space.length})</Text>
+              <TouchableOpacity
+              onPress={()=>navigate('ListIMGScr',{
+                idContent,
+                spaceTab:'active',menuTab:'',videoTab:''})}
+              >
               <Text>Xem tất cả >></Text>
+              </TouchableOpacity>
           </View>
           {this.state.listData.image_space.length>0 ?
             <View style={rowFlexImg}>
@@ -233,8 +233,14 @@ export default class DetailScreen extends Component {
 
 
           <View style={titleSpace}>
-              <Text style={[colorNumPP,sizeTitle]}>MENU</Text>
+              <Text style={[colorNumPP,sizeTitle]}>MENU ({this.state.listData.image_menu.length})</Text>
+              <TouchableOpacity
+              onPress={()=>navigate('ListIMGScr',{
+                idContent,
+                spaceTab:'',menuTab:'active',videoTab:''})}
+              >
               <Text>Xem tất cả >></Text>
+              </TouchableOpacity>
           </View>
           {this.state.listData.image_menu.length>0 ?
             <View style={rowFlexImg}>
@@ -247,7 +253,13 @@ export default class DetailScreen extends Component {
 
           <View style={titleSpace}>
               <Text style={[colorNumPP,sizeTitle]}>VIDEO</Text>
+              <TouchableOpacity
+              onPress={()=>navigate('ListIMGScr',{
+                idContent,
+                spaceTab:'',menuTab:'',videoTab:'active'})}
+              >
               <Text>Xem tất cả >></Text>
+              </TouchableOpacity>
           </View>
           {this.state.listData.image_space.length>0 ?
             <View style={rowFlexImg}>
@@ -276,7 +288,7 @@ export default class DetailScreen extends Component {
       </View>
       <View style={{width,height:height/2}}>
       <MapView
-          style={{width,height:height/2,position:'absolute',zIndex:10}}
+          style={{flex:1,height:height/2,zIndex:10,alignSelf:'stretch'}}
           region={this.state.region}
           rotateEnabled
         >
@@ -299,14 +311,14 @@ export default class DetailScreen extends Component {
 
           <View>
               <View>
-                <TextInput style={txtComments} underlineColorAndroid='transparent' placeholder="Bình luận của bạn ..." />
+                <TextInput style={[txtComments,padLeft]} underlineColorAndroid='transparent' placeholder="Bình luận của bạn ..." />
                 <TouchableOpacity style={{position:'absolute',right:15,top:Platform.OS==='ios' ? 15 : 18}}>
                 <Image source={ImageIcon} style={{width:20,height:20,}} />
                 </TouchableOpacity>
               </View>
               {this.state.listData.content._comments.length>0 ?
                 this.state.listData.content._comments.map(e=>(
-                  <View key={e.id}>
+                  <View key={e.id} style={{borderBottomWidth:1,borderBottomColor:'#E1E7EC',paddingBottom:10}}>
                   <View style={rowFlex}>
                     <Image source={{uri:`${e._comment_by.avatar}`}} style={{width:66,height:66,borderRadius:33}} />
                     <View>
@@ -333,15 +345,70 @@ export default class DetailScreen extends Component {
                   </View>
 
                   <View style={{padding:15,paddingLeft:0,flexDirection:'row'}}>
-                      <View style={{flexDirection:'row',}}>
+                      <TouchableOpacity style={{flexDirection:'row',}}>
                         <Image style={{width:22,height:18,marginRight:5}} source={likeIcon} />
                         <Text>{e.like_comment} like</Text>
-                      </View>
-                      <View  style={{flexDirection:'row',marginLeft:20}}>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                      onPress={()=>this.setState({showComments:e.id})}
+                      style={{flexDirection:'row',marginLeft:20}}>
                         <Image style={{width:22,height:22,marginRight:5}} source={commentsIcon} />
                         <Text>Comments</Text>
-                      </View>
+                      </TouchableOpacity>
                   </View>
+
+                  <View style={this.state.showComments===e.id ? show : hide}>
+                    <TextInput style={[txtComments,padLeft]} underlineColorAndroid='transparent' placeholder="Bình luận của bạn ..." />
+                    <TouchableOpacity style={{position:'absolute',right:15,top:Platform.OS==='ios' ? 15 : 18}}>
+                    <Image source={ImageIcon} style={{width:20,height:20,}} />
+                    </TouchableOpacity>
+                  </View>
+
+                    {e._replies.length>0 ?
+                      e._replies.map(r =>(
+                        <View style={{width:width-70,marginLeft:70,marginTop:10,borderTopWidth:1,borderTopColor:'#E1E7EC'}} key={r.id}>
+                        <View style={rowFlex}>
+                          <Image source={{uri:`${r._comment_by.avatar}`}} style={{width:66,height:66,borderRadius:33}} />
+                          <View>
+                              <View style={{paddingLeft:10}}>
+                                <Text style={colorText}>{r._comment_by.full_name}</Text>
+                              </View>
+                              <View style={{flexDirection:'row',marginLeft:10,marginTop:5}}>
+                                  <Text>{Moment(r.created_at).format('h:m A')}</Text><Text> | </Text><Text>{Moment(r.created_at).format('DD/MM/YYYY')}</Text>
+                              </View>
+                          </View>
+                        </View>
+
+                        <View style={mrgTop}>
+                            <Text>{r.content}</Text>
+                            <View style={{flexDirection:'row',marginRight:5,marginTop:5}}>
+                              {r._images.length>0 ?
+                                r._images.map(img =>(
+                                  <Image key={img.id} source={{uri:`${global.url_media}${img.thumb}`}} style={{width:65,height:65,marginRight:7}} />
+                                ))
+                                :
+                                <View></View>
+                              }
+                            </View>
+                        </View>
+
+                        <View style={{paddingTop:15,paddingLeft:0,flexDirection:'row'}}>
+                            <TouchableOpacity style={{flexDirection:'row',}}>
+                              <Image style={{width:22,height:18,marginRight:5}} source={likeIcon} />
+                              <Text>{r.like_comment} like</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                          <View style={rowFlex}>
+
+                          </View>
+                        </View>
+                      ))
+
+                      :
+                      <View></View>
+                    }
+
 
                   </View>
                 ))
@@ -488,6 +555,7 @@ const styles = StyleSheet.create({
     color:'#fff',
     fontSize:15,
   },
+  width30:{width:width-50},
   txtComments:{borderWidth:1,borderColor:'#E1E7EC',borderRadius:3,padding:15},
   mrgTop:{marginTop:10},
   wrapService:{
@@ -509,11 +577,11 @@ const styles = StyleSheet.create({
   sizeTitle:{fontSize:20},
   titleSpace:{flexDirection:'row',justifyContent:'space-between',padding:30,paddingLeft:0,paddingRight:20,},
   marRight:{marginRight:10},
-  rowFlex:{flexDirection:'row',padding:5,paddingLeft:10,marginTop:10},
+  rowFlex:{flexDirection:'row',paddingLeft:10,paddingRight:10,marginTop:10},
   rowFlexImg:{flexDirection:'row',marginBottom:20},
   rowFlexBottom:{flexDirection:'row',padding:5,paddingLeft:10,marginTop:15,marginBottom:15,alignItems:'flex-end'},
-
-  wrapContentDetail:{flexWrap:'wrap',flex:1,padding:10,backgroundColor:'#fff'},
+  padLeft:{paddingLeft:15},
+  wrapContentDetail:{flexWrap:'wrap',padding:10,backgroundColor:'#fff'},
   headStyle : {
       backgroundColor: '#D0021B',paddingTop: Platform.OS==='ios' ? 25 : 10, alignItems: 'center',height: 110,
       position:'relative',zIndex:5,
