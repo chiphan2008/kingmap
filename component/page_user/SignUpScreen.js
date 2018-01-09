@@ -1,14 +1,15 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Platform, View, Text, Image, Button, StyleSheet, Dimensions, TextInput } from 'react-native';
+import { Platform, View, Text, Image, Button, StyleSheet, Dimensions, TextInput,TouchableOpacity } from 'react-native';
 //import { CheckBox } from 'react-native-elements';
+import bgMap from '../../src/icon/bg-map.png';
 import LogoHome from '../../src/icon/ic-home/Logo-home.png';
 import FacebookColor from '../../src/icon/Facebook_color.png';
 import GoogleColor from '../../src/icon/Google_color.png';
 const {height, width} = Dimensions.get('window');
 
-export default class CountryScreen extends Component {
+export default class SignUpScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,13 +18,15 @@ export default class CountryScreen extends Component {
   }
   render() {
     const {
-      container, imgLogo, title, txtInput,mrgTop,
-      btn, colorPress, contentWrap, btnWrap,forgotpwd
+      container, imgLogo, title, txtInput,mrgTop,imgSoci,bgImg,
+      btn, colorPress, contentWrap, btnWrap,forgotpwd,btnWrapSoci,
     } = styles;
+    const {navigate} = this.props.navigation;
     return (
       <View style={container}>
+      <Image source={bgMap} style={bgImg} />
         <View style={contentWrap}>
-              <Image style={imgLogo} source={LogoLarge} />
+              <Image style={imgLogo} source={LogoHome} />
               <Text style={title}>REGISTER</Text>
               <View style={mrgTop}>
               <TextInput underlineColorAndroid='transparent' style={txtInput} selectionColor='#5b89ab' placeholder="Full name" placeholderTextColor="#ddd" />
@@ -39,7 +42,8 @@ export default class CountryScreen extends Component {
                   <Image style={imgSoci} source={GoogleColor} />
               </View>
               <View style={btnWrap}>
-                  <Text>Do not have an account? <Text style={forgotpwd}>Register now!</Text> </Text>
+                  <Text>Do not have an account?  </Text><TouchableOpacity onPress={()=>navigate('LoginScr')}>
+                  <Text style={forgotpwd}>Login now!</Text></TouchableOpacity>
               </View>
         </View>
       </View>
@@ -51,8 +55,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    backgroundColor:'transparent',
   },
-  btnWrap :{marginTop:50},
+  btnWrap :{marginTop:50,flexDirection: 'row',alignItems: 'center',justifyContent: 'center',},
   forgotpwd : {textAlign: 'right', color: '#5b89ab'},
   pullL : {textAlign: 'left',},
   pullR : {textAlign: 'right',},
@@ -77,7 +82,8 @@ const styles = StyleSheet.create({
     borderRadius : 5,
     width: width - 50,
     borderWidth: 1,
-    marginTop: Platform.OS === 'ios' ? 10 : 0,
+    marginTop: Platform.OS === 'ios' ? 10 : 15,
+    backgroundColor:'#fff',
   },
   btn : {
     paddingTop:15,
@@ -94,5 +100,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#D0021B',
     overflow:'hidden',
     borderColor : "#D0021B",
+  },
+  bgImg : {
+    width,height,position: 'absolute',justifyContent: 'center',alignItems: 'center',alignSelf: 'stretch',resizeMode: 'stretch',
   },
 });

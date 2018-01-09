@@ -161,6 +161,15 @@ export default class App extends Component {
       ListIMGScr: {
         screen: ListImageContent,
       },
+      LoginScr: {
+        screen: LoginScreen,
+      },
+      SignUpScr: {
+        screen: SignUpScreen,
+      },
+      ForgotScr: {
+        screen: ForgotPasswordScreen,
+      },
 
     },
     {

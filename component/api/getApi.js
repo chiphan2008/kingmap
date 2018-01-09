@@ -4,7 +4,7 @@ import global from '../global';
 
 const getApi = async (url) => {
   try {
-    AsyncStorage.removeItem('@AuthKey:key');
+    //AsyncStorage.removeItem('@AuthKey:key');
     const auth_key = await AsyncStorage.getItem('@AuthKey:key');
     auth_key = JSON.parse(auth_key);
 
@@ -17,7 +17,6 @@ const getApi = async (url) => {
           'Authorization': 'Bearer '+ auth_key.access_token,
         },
       }).then(res => res.json());
-      //console.log('resposive============',auth_key.access_token);
       if(resposive.code!==401) return resposive;
     }
 
@@ -29,9 +28,7 @@ const getApi = async (url) => {
         'Authorization': 'Bearer '+ resposive.access_token,
       },
     }).then(res => res.json());
-    //console.log('resposive============',auth_key.access_token);
     if(resposive.code!==401) return resJson;
-    //console.log('-----------------resposive',resposive);
 
   } catch (error) {
      //console.log('error',error);

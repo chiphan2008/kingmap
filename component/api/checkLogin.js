@@ -1,8 +1,8 @@
 import { AsyncStorage } from 'react-native';
 
-const getLanguage = async () => {
+const checkLogin = async () => {
     try {
-        const value = await AsyncStorage.getItem('@MyLanguage:key');
+        const value = await AsyncStorage.getItem('@MyAccount:key');
         if (value !== null) {
             return JSON.parse(value);
         }
@@ -13,4 +13,4 @@ const getLanguage = async () => {
     }
 };
 
-export default getLanguage;
+export default checkLogin;

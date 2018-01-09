@@ -3,12 +3,13 @@
 import React, { Component } from 'react';
 import { Platform, View, Text, Image, Button, StyleSheet, Dimensions, TextInput } from 'react-native';
 //import { CheckBox } from 'react-native-elements';
+import bgMap from '../../src/icon/bg-map.png';
 import LogoHome from '../../src/icon/ic-home/Logo-home.png';
 import FacebookColor from '../../src/icon/Facebook_color.png';
 import GoogleColor from '../../src/icon/Google_color.png';
 const {height, width} = Dimensions.get('window');
 
-export default class CountryScreen extends Component {
+export default class ForgotPasswordScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,12 +19,13 @@ export default class CountryScreen extends Component {
   render() {
     const {
       container, imgLogo, title, txtInput,mrgTop,
-      btn, colorPress, contentWrap,txtAlign,
+      btn, colorPress, contentWrap,txtAlign,bgImg,
     } = styles;
     return (
       <View style={container}>
+      <Image source={bgMap} style={bgImg} />
         <View style={contentWrap}>
-              <Image style={imgLogo} source={LogoLarge} />
+              <Image style={imgLogo} source={LogoHome} />
               <Text style={title}>FORGOR PASSWORD</Text>
               <View style={mrgTop}>
               <TextInput style={txtInput} underlineColorAndroid='transparent' selectionColor='#5b89ab' placeholder="Email" placeholderTextColor="#ddd" />
@@ -62,6 +64,7 @@ const styles = StyleSheet.create({
     width: width - 50,
     borderWidth: 1,
     marginTop: Platform.OS === 'ios' ? 10 : 0,
+    backgroundColor:'#fff',
   },
   btn : {
     paddingTop:15,
@@ -78,5 +81,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#D0021B',
     overflow:'hidden',
     borderColor : "#D0021B",
+  },
+  bgImg : {
+    width,height,position: 'absolute',justifyContent: 'center',alignItems: 'center',alignSelf: 'stretch',resizeMode: 'stretch',
   },
 });

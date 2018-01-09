@@ -8,7 +8,7 @@ import FacebookColor from '../../src/icon/Facebook_color.png';
 import GoogleColor from '../../src/icon/Google_color.png';
 const {height, width} = Dimensions.get('window');
 
-export default class CountryScreen extends Component {
+export default class VerifyAccountScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +23,7 @@ export default class CountryScreen extends Component {
     return (
       <View style={container}>
         <View style={contentWrap}>
-              <Image style={imgLogo} source={LogoLarge} />
+              <Image style={imgLogo} source={LogoHome} />
               <Text style={title}>VERIFY ACCOUNT</Text>
               <View style={verify}>
                 <TextInput underlineColorAndroid='transparent' style={txtInput} returnKeyType={"next"} maxLength = {1} selectionColor='#5b89ab' placeholderTextColor="#ddd" />
