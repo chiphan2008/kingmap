@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import {Platform, View, Text, StyleSheet, Dimensions, Image, TextInput, TouchableOpacity,ScrollView,Modal} from 'react-native';
+import {Platform, View, WebView, Text, StyleSheet, Dimensions, Image, TextInput, TouchableOpacity,ScrollView,Modal} from 'react-native';
 const {height, width} = Dimensions.get('window');
 import util from 'util';
 //import ImageCarousel from 'react-native-image-carousel';
@@ -26,6 +26,7 @@ export default class ListImageContent extends Component {
       showVideo : '',
       listSpace:[],
       listMenu:[],
+      listVideo:[],
       isModalSpaceOpened: false,
       isModalMenuOpened: false,
       currentImageIndex: 0 ,
@@ -37,9 +38,12 @@ export default class ListImageContent extends Component {
     //console.log('idContent',idContent);
     getApi(`${global.url}${'content/'}${idContent}`)
     .then(arrData => {
-      //console.log('arrData',arrData);url:
+      //console.log('arrData',arrData.data.link_video);
       var arrSpace = [];
       var arrMenu = [];
+      this.setState({
+        listVideo:arrData.data.link_video,
+      });
       arrData.data.image_space.map(e=>arrSpace.push({url:`${global.url_media}${e}`}));
       arrData.data.image_menu.map(e=>arrMenu.push({url:`${global.url_media}${e}`}));
         this.setState({
@@ -71,8 +75,6 @@ export default class ListImageContent extends Component {
     const {navigate,goBack} = this.props.navigation;
     const { idContent, spaceTab, menuTab, videoTab } = this.props.navigation.state.params;
 
-    //console.log("this.props.CategoryScreen=",util.inspect(this.props.navigation.state.key,false,null));
-console.log('this.state.listSpace',this.state.listSpace);
     const {
       container,
       headCatStyle, headContent,plusStyle,imgPlusStyle,
@@ -156,10 +158,15 @@ console.log('this.state.listSpace',this.state.listSpace);
         </View>
 
         <View style={[wrapListImage,this.state.showVideo==='active' ? show : hide]}>
-          {this.state.listSpace.map((e,index) => (
-            <TouchableOpacity key={index}>
-              <Image style={imgTab} source={{uri:`${global.url_media}${e}`}} />
-            </TouchableOpacity>
+          {this.state.listVideo.map((e,index) => (
+            <View key={index}>
+            {console.log('e',e)}
+              <WebView
+                source={{uri: `${e}`}}
+                style={imgTab}
+                javaScriptEnabled
+              />
+            </View>
           ))}
         </View>
         </ScrollView>

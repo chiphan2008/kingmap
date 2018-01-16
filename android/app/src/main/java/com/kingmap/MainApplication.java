@@ -1,8 +1,8 @@
 package com.kingmap;
 
 import android.app.Application;
-
 import com.facebook.react.ReactApplication;
+
 import com.reactnative.photoview.PhotoViewPackage;
 import io.rumors.reactnativesettings.RNSettingsPackage;
 import com.horcrux.svg.SvgPackage;
@@ -27,7 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new MainReactPackage(),
             new PhotoViewPackage(),
             new RNSettingsPackage(),
             new SvgPackage(),

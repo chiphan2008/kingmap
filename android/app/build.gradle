@@ -93,6 +93,7 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -106,6 +107,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        vectorDrawables.useSupportLibrary = true
     }
     signingConfigs {
         release {
@@ -148,6 +150,7 @@ android {
 }
 
 dependencies {
+
     compile project(':react-native-photo-view')
     compile project(':react-native-settings')
     compile project(':react-native-svg')

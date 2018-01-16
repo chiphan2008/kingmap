@@ -26,12 +26,14 @@ export default class SelectLocation extends Component {
       idCity:1,
     };
   }
-  getCity(id_country){
-    getApi(`${global.url}${'cities/'}${id_country}`)
-    .then(arrCity => {
-        this.setState({ listCity: arrCity.data });
-    })
-    .catch(err => console.log(err));
+  getCity(){
+    checkLocation().then(e=>{
+      getApi(`${global.url}${'cities/'}${e.idCountry}`)
+      .then(arrCity => {
+          this.setState({ listCity: arrCity.data });
+      })
+      .catch(err => console.log(err));
+    });
   }
 
   getCountry(){
@@ -55,7 +57,7 @@ export default class SelectLocation extends Component {
   componentWillMount(){
     checkLocation().then((e)=>{
       this.getDistrict(e.idCity);
-      this.setState({showCheckCountry:e.idCountry, showCheckCity: e.idCity});
+      this.setState({showCheckCountry:e.idCountry, showCheckCity: e.idCity, showCheckDistrict: e.idDist});
     });
   }
 
@@ -67,11 +69,11 @@ export default class SelectLocation extends Component {
          <View style={[styles.container, this.state.showDistrict ? styles.show : styles.hide]}>
            <TouchableOpacity
                onPress={()=>{
-                 this.setState({ showDistrict:false, showCountry:true, showCity:false, });
-                 this.getCountry();
+                 this.setState({showDistrict:false, showCountry:false, showCity:true,});
+                 this.getCity();
                }}
                style={styles.listOver}>
-           <Text style={styles.txtNextItem} >Chọn địa điểm <Image style={styles.imgNextLoc} source={arrowNextIC}/></Text>
+           <Text style={styles.txtNextItem} >Chọn Tỉnh/TP khác <Image style={styles.imgNextLoc} source={arrowNextIC}/></Text>
            </TouchableOpacity>
            <FlatList
                 ListEmptyComponent={<Text>Loading ...</Text>}
@@ -82,7 +84,7 @@ export default class SelectLocation extends Component {
                   <TouchableOpacity
                      style={{justifyContent:'space-between',flexDirection:'row',}}
                      onPress={() => {
-
+                          this.setState({showCheckDistrict:item.id});
                          AsyncStorage.setItem('@LocationKey:key', JSON.stringify({
                                    idCountry:this.state.showCheckCountry,
                                    idCity:this.state.showCheckCity,
@@ -97,10 +99,12 @@ export default class SelectLocation extends Component {
                   </TouchableOpacity>
                   </View>
                 )} />
-          
+
          </View>
 
          <View style={[styles.container,this.state.showCountry ? styles.show : styles.hide]}>
+
+
            <FlatList
                 ListEmptyComponent={<Text>Loading ...</Text>}
                 data={this.state.listCountry}
@@ -109,26 +113,30 @@ export default class SelectLocation extends Component {
                   <View  style={styles.listItem}>
                   <TouchableOpacity
                      style={{justifyContent:'space-between',flexDirection:'row',}}
-                     onPress={()=>this.setState({showCheckCountry:item.id})}
+                     onPress={()=>{
+                       this.setState({showDistrict:false, showCountry:false, showCity:true,idCountry:item.id});
+                       this.getCity();
+                     }}
                    >
                   <Text style={styles.txtItem} >{item.name}</Text>
                   <Image style={[styles.imgCheck,this.state.showCheckCountry===item.id ? styles.show : styles.hide]} source={checkIC}/>
                   </TouchableOpacity>
                   </View>
                 )} />
-          <TouchableOpacity
-          onPress={()=> {
-            if(this.state.showCheckCountry!==''){
-              this.setState({showDistrict:false, showCountry:false, showCity:true,idCountry:this.state.showCheckCountry});
-              this.getCity(this.state.showCheckCountry);
-            };
-          }}
-          style={{padding:15,justifyContent:'center',alignItems:'center',backgroundColor:'#D0021B',}} >
-          <Text style={{color:'#fff',fontSize:17}}>Next</Text>
-          </TouchableOpacity>
+
          </View>
 
          <View style={[styles.container,this.state.showCity ? styles.show : styles.hide]}>
+         <TouchableOpacity
+             onPress={()=>{
+               this.setState({
+                 showDistrict:false, showCountry:true, showCity:false,
+                });
+               this.getCountry();
+             }}
+             style={styles.listOver}>
+         <Text style={styles.txtNextItem} >Chọn quốc gia khác<Image style={styles.imgNextLoc} source={arrowNextIC}/></Text>
+         </TouchableOpacity>
            <FlatList
                 ListEmptyComponent={<Text>Loading ...</Text>}
                 data={this.state.listCity}
@@ -137,27 +145,24 @@ export default class SelectLocation extends Component {
                   <View  style={styles.listItem}>
                   <TouchableOpacity
                      style={{justifyContent:'space-between',flexDirection:'row',}}
-                     onPress={()=>this.setState({showCheckCity:item.id})}
+                     onPress={()=>{
+                       this.setState({
+                         showDistrict:true,showCountry:false,showCity:false,idCity:item.id,
+                         showCheckCity:item.id,
+                       });
+                       this.getDistrict(item.id);
+                       AsyncStorage.setItem('@LocationKey:key', JSON.stringify({
+                                 idCountry:this.state.showCheckCountry,
+                                 idCity:item.id,
+                       }));
+                     }}
                    >
                   <Text style={styles.txtItem} >{item.name}</Text>
                   <Image style={[styles.imgCheck,this.state.showCheckCity===item.id ? styles.show : styles.hide]} source={checkIC}/>
                   </TouchableOpacity>
                   </View>
                 )} />
-          <TouchableOpacity
-          onPress={()=>{
-            if(this.state.showCheckCity!==''){
-              this.setState({showDistrict:true,showCountry:false,showCity:false,idCity:this.state.showCheckCity});
-              this.getDistrict(this.state.showCheckCity);
-              AsyncStorage.setItem('@LocationKey:key', JSON.stringify({
-                        idCountry:this.state.showCheckCountry,
-                        idCity:this.state.showCheckCity,
-              }));
-            };
-          }}
-          style={{padding:15,justifyContent:'center',alignItems:'center',backgroundColor:'#D0021B',}}>
-          <Text style={{color:'#fff',fontSize:17}}>Next</Text>
-          </TouchableOpacity>
+
          </View>
 
         </View>
@@ -169,7 +174,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor:'#FFFDFF',
     position:'relative',
-    maxHeight:Platform.OS ==='ios' ? 400 : 430,
+    maxHeight:Platform.OS ==='ios' ? 340 : 370,
   },
   show:{display:'flex'},
   hide:{display:'none'},

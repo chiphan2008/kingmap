@@ -2,17 +2,20 @@ import { AsyncStorage } from 'react-native';
 
 const postApi = async (url,param) => {
   try {
-    //AsyncStorage.removeItem('AuthKey');
-    //console.log('==========url,param===========',url,param);
+
+    const auth_key = await AsyncStorage.getItem('@AuthKey:key');
+    auth_key = JSON.parse(auth_key);
+
     let response = await fetch(url, {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer '+ auth_key.access_token,
         },
-        body: JSON.stringify(param),
+        body: param,
       });
     let responseJson = await response.json();
+
     return responseJson;
   } catch (error) {
   }

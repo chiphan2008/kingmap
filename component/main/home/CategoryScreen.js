@@ -34,6 +34,8 @@ export default class CategoryScreen extends Component {
 
       showCat : false,
       showInfoOver : false,
+      id_subCat:'',
+      name_subCat:'Tất cả',
       markers:[{
         id : 1,
         lat: 0,
@@ -51,16 +53,11 @@ export default class CategoryScreen extends Component {
 
   }
 
-  getCategory(idcat,loc){
-    //console.log('idcat,loc',idcat,loc);
-    getApi(global.url+'content-by-category?category='+idcat+'&location='+loc)
+  getCategory(idcat,idsub=null,loc){
+    let url = `${global.url}${'content-by-category?category='}${idcat}${'&location='}${loc}`;
+    if(idsub!==null) url += `${'&subcategory='}${idsub}`;
+    getApi(url)
     .then(arrData => {
-      //console.log('--arrData--',arrData.data)
-        if(arrData.data.length === 0)
-          arrData.data = this.state.markers;
-        else
-          this.setState({showInfoOver:true});
-
         this.setState({ markers: arrData.data });
     })
     .catch(err => console.log(err));
@@ -72,8 +69,7 @@ export default class CategoryScreen extends Component {
           (position) => {
             const id = this.props.navigation.state.params.idCat;
             const latlng = `${position.coords.latitude}${','}${position.coords.longitude}`;
-            //this.getCategory(this.props.navigation.state.params.idCat,this.state.curLocation.latlng);
-            this.getCategory(id,latlng);
+            this.getCategory(id,null,latlng);
             this.setState({
               curLocation : {
                 latitude:position.coords.latitude,
@@ -89,21 +85,21 @@ export default class CategoryScreen extends Component {
             //console.log('this.props.navigation.state.params',this.props.navigation.state.params.idCat);
            },
            (error) => {
-            getLocationByIP().then(e => {
-            this.getCategory(this.props.navigation.state.params.idCat,`${e.latitude}${','}${e.longitude}`);
-            this.setState({
-              curLocation : {
-                latitude:e.latitude,
-                longitude: e.longitude,
-                lat:e.latitude,
-                lng: e.longitude,
-                altitude: 7,
-                latitudeDelta:  0.044422,
-                longitudeDelta: 0.011121,
-                latlng:`${e.latitude}${','}${e.longitude}`,
-              }
-            });
-            });
+            // getLocationByIP().then(e => {
+            // this.getCategory(this.props.navigation.state.params.idCat,`${e.latitude}${','}${e.longitude}`);
+            // this.setState({
+            //   curLocation : {
+            //     latitude:e.latitude,
+            //     longitude: e.longitude,
+            //     lat:e.latitude,
+            //     lng: e.longitude,
+            //     altitude: 7,
+            //     latitudeDelta:  0.044422,
+            //     longitudeDelta: 0.011121,
+            //     latlng:`${e.latitude}${','}${e.longitude}`,
+            //   }
+            // });
+            // });
           },
           {enableHighAccuracy: true, timeout: 5000, maximumAge: 5000}
     );
@@ -112,11 +108,25 @@ export default class CategoryScreen extends Component {
   componentDidMount(){
    this.getLoc();
   }
-
+  onRegionChange(region) {
+    this.setState({
+      region:region,
+      curLocation : {
+      latitude:region.latitude,
+      longitude: region.longitude,
+      lat:region.latitude,
+      lng: region.longitude,
+      altitude: 7,
+      latitudeDelta:  0.004422,
+      longitudeDelta: 0.001121,
+      latlng:`${region.latitude},${region.longitude}`,
+    } });
+  }
   render() {
 
     const {navigate,goBack} = this.props.navigation;
     const { idCat, name_cat, sub_cat } = this.props.navigation.state.params;
+    //console.log('sub_cat',sub_cat);
     //console.log("this.props.CategoryScreen=",util.inspect(this.props.navigation.state.key,false,null));
     const {
       container,
@@ -125,7 +135,7 @@ export default class CategoryScreen extends Component {
       wrapContent,leftContent,rightContent,middleContent,imgContent,labelCat,
       imgFlatItem,catInfoOver,txtTitleOver,txtAddrOver,wrapInfoOver,
     } = styles;
-    //onRegionChange={this.onRegionChange}
+
     return (
       <View style={container}>
         <View style={headCatStyle}>
@@ -137,43 +147,61 @@ export default class CategoryScreen extends Component {
 
                 <TouchableOpacity
                       style={{alignItems:'center'}}
-                      onPress={()=>this.setState({showCat :!this.state.showCat,showInfoOver:false})}
+                      onPress={()=>this.setState({showCat :!this.state.showCat})}
                       >
                       <Text style={{color:'white',fontSize:16}}>{name_cat}</Text>
-                      <Image source={sortDown} style={{width:14, height:14}} />
+                      <Image source={sortDown} style={{width:18, height:18}} />
                 </TouchableOpacity>
+                <TouchableOpacity
+                onPress={()=>{
+                  navigate('ListCatScr',{idCat,name_cat,id_subCat:this.state.id_subCat,name_subCat:this.state.name_subCat,sub_cat});
+                }}>
                 <Image source={listIC} style={{width:16, height:20}} />
+                </TouchableOpacity>
             </View>
         </View>
 
-        <View style={[popover, this.state.showCat ? show : hide]}>
+        <TouchableOpacity onPress={()=>this.setState({showCat:!this.state.showCat})} style={[popover, this.state.showCat ? show : hide]}>
             <View style={[overLayoutCat,shadown]}>
             <FlatList
                keyExtractor={item => item.id}
                data={sub_cat}
                renderItem={({item}) => (
                  <TouchableOpacity
-                 onPress={()=>{navigate('ListCatScr',{idCat,name_cat,sub_cat,id_subCat:item.id, name_subCat:item.name});
-                  this.setState({showCat:!this.state.showCat});
+                 onPress={()=>{
+                  this.getCategory(idCat,item.id,this.state.curLocation.latlng)
+                  this.setState({showCat:!this.state.showCat,id_subCat:item.id,name_subCat:item.name});
                }}
                  style={listCatOver}>
                    <Text style={colorText}>{item.name}</Text>
                </TouchableOpacity>
             )} />
+            <TouchableOpacity
+            onPress={()=>{
+            //onPress={()=>{navigate('ListCatScr',{idCat,name_cat,sub_cat,id_subCat:item.id, name_subCat:item.name});
+             this.getCategory(idCat,null,this.state.curLocation.latlng)
+             this.setState({showCat:!this.state.showCat,id_subCat:null,name_subCat:''});
+          }}
+            style={listCatOver}>
+              <Text style={colorText}>Tất cả</Text>
+          </TouchableOpacity>
             </View>
 
-        </View>
+        </TouchableOpacity>
 
-        <MapView
+        <MapView.Animated
             style={{flex:1,position:'relative',zIndex:1}}
             region={ this.state.curLocation }
+            onRegionChange={()=>this.onRegionChange.bind(this)}
             onLoad={()=>this.getLoc()}
-            rotateEnabled
+            customMapStyle={global.style_map_ios}
+            showsPointsOfInterest={false}
 
           >
           {this.state.markers.map((marker,index) => {
             return (
             <MapView.Marker
+
               key={marker.id}
               coordinate={{
                 latitude: Number(marker.lat),
@@ -181,7 +209,7 @@ export default class CategoryScreen extends Component {
               }}
               title={marker.name}
               description={`${marker.address}${', '}${marker._district.name}${', '}${marker._city.name}${', '}${marker._country.name}`}
-              zoomEnabled
+              onPress={()=>navigate('DetailScr',{idContent:marker.id,lat:marker.lat,lng:marker.lng})}
             >
             <Image source={{uri:`${global.url_media}${marker._category_type.marker}`}} style={{width:48,height:54}} />
             </MapView.Marker>
@@ -189,33 +217,20 @@ export default class CategoryScreen extends Component {
         })}
 
           <MapView.Marker
+            draggable
+            onDragEnd={(e) => {
+            this.getCategory(idCat,null,`${e.nativeEvent.coordinate.latitude},${e.nativeEvent.coordinate.longitude}`);
+          }}
             coordinate={{
               latitude: Number(this.state.curLocation.latitude),
               longitude: Number(this.state.curLocation.longitude),
             }}
 
           />
-          </MapView>
+          </MapView.Animated>
           <TouchableOpacity style={plusStyle}>
               <Image source={plusIC} style={imgPlusStyle} />
           </TouchableOpacity>
-
-          <View style={[catInfoOver, this.state.showInfoOver ? show : hide ]}>
-                <TouchableOpacity
-                onPress={()=>navigate('DetailScr',{idContent:this.state.markers[0].id,lat:this.state.markers[0].lat,lng:this.state.markers[0].lng})}
-                >
-                  <Image style={imgFlatItem} source={{uri:`${global.url_media}${this.state.markers[0].avatar}`}} />
-                </TouchableOpacity>
-                <View style={wrapInfoOver}>
-                    <TouchableOpacity
-                    onPress={()=>navigate('DetailScr',{idContent:this.state.markers[0].id,lat:this.state.markers[0].lat,lng:this.state.markers[0].lng})}
-                    >
-                        <Text numberOfLines={2} style={txtTitleOver}>{this.state.markers[0].name}</Text>
-                    </TouchableOpacity>
-                        <Text numberOfLines={1} style={txtAddrOver}>{`${this.state.markers[0].address}${', '}${this.state.markers[0]._district.name}${', '}${this.state.markers[0]._city.name}`}</Text>
-
-                </View>
-          </View>
 
       </View>
     );

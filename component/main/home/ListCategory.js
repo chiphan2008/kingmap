@@ -43,9 +43,11 @@ export default class CategoryScreen extends Component {
 
   }
 
-  getCategory(idcat,idsub,name_subCat,loc){
+  getCategory(idcat,idsub=null,name_subCat,loc){
     this.setState({nameSubCat:name_subCat,showCat:false});
-    getApi(global.url+'content-by-category?category='+idcat+'&subcategory='+idsub+'&location='+loc)
+    let url = `${global.url}${'content-by-category?category='}${idcat}${'&location='}${loc}`;
+    if(idsub!==null) url += `${'&subcategory='}${idsub}`;
+    getApi(url)
     .then(arrData => {
       //console.log('parseFloat(marker.lat)',arrTest.data)
         //if(arrData.data.length === 0) arrData.data = this.state.markers;
@@ -108,7 +110,7 @@ export default class CategoryScreen extends Component {
             </View>
         </View>
 
-        <View style={[popover, this.state.showCat ? show : hide]}>
+        <TouchableOpacity onPress={()=>this.setState({showCat:!this.state.showCat})} style={[popover, this.state.showCat ? show : hide]}>
             <View style={[overLayoutCat,shadown]}>
             <FlatList
                keyExtractor={item => item.id}
@@ -123,7 +125,7 @@ export default class CategoryScreen extends Component {
                )} />
 
             </View>
-        </View>
+        </TouchableOpacity>
 
         <View>
           <Text style={titleSubCat}>{this.state.nameSubCat.toUpperCase()}</Text>

@@ -139,7 +139,7 @@ export default class HomeTab extends Component {
       headStyle, headContent,imgLogoTop,imgSocial, imgWidthGoogle, imgInfo,imgShare,wrapIcRight,FlatList,
       selectBox,optionListStyle,OptionItem,inputSearch,show,hide,colorTextPP,colorNumPP,
       wrapContent,imgContent,square,wrapCircle,logoCenter,circle1,circle2,circle3,circle4,circle5,circle6,circle7,circle8,labelCat,
-      plusStyle,imgPlusStyle,popover,overLayout,listOver,popoverShare,overLayoutShare,listOverShare,imgMargin,imgUp,imgUpInfo,imgUpShare
+      plusStyle,imgPlusStyle,popover,overLayout,listOver,popoverShare,overLayoutShare,listOverShare,imgMargin,imgUpHome,imgUpInfo,imgUpShare
     } = styles;
 
     return (
@@ -270,8 +270,8 @@ export default class HomeTab extends Component {
             <Image source={plusIC} style={imgPlusStyle} />
         </TouchableOpacity>
 
-        <View style={[popover, this.state.showInfo ? show : hide]}>
-          <Image style={[imgUp,imgUpInfo]} source={upDD} />
+        <TouchableOpacity onPress={()=>this.setState({showInfo:!this.state.showInfo})} style={[popover, this.state.showInfo ? show : hide]}>
+          <Image style={[imgUpHome,imgUpInfo]} source={upDD} />
 
           <View style={overLayout}>
           <View style={listOver}>
@@ -295,10 +295,10 @@ export default class HomeTab extends Component {
               <Text style={colorTextPP}>{this.state.lang.share}: <Text style={colorNumPP}>{this.state.listStatus.countShare}k</Text></Text>
           </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
-        <View style={[popoverShare, this.state.showShare ? show : hide]}>
-          <Image style={[imgUp,imgUpShare]} source={upDD} />
+        <TouchableOpacity onPress={()=>this.setState({showShare:!this.state.showShare})} style={[popoverShare, this.state.showShare ? show : hide]}>
+          <Image style={[imgUpHome,imgUpShare]} source={upDD} />
             <View style={overLayoutShare}>
                 <TouchableOpacity style={listOverShare}>
                     <Image style={[imgWidthGoogle,imgMargin]} source={googleIC} />
@@ -313,7 +313,7 @@ export default class HomeTab extends Component {
                     <Text style={colorNumPP}>Twitter</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </TouchableOpacity>
 
       </View>
     );

@@ -7,12 +7,12 @@ import {
 } from 'react-native';
 import util from 'util';
 import Moment from 'moment';
-import postCommentApi from '../../api/postCommentApi';
+//import ImagePicker from 'react-native-image-crop-picker';
+import postApi from '../../api/postApi';
 import global from '../../global';
-import checkLogin from '../../api/checkLogin';
 
 import likeIcon from '../../../src/icon/ic-like.png';
-import likeBlueIcon from '../../../src/icon/ic-blue/ic-like.png';
+import likeFullIcon from '../../../src/icon/ic-like-full.png';
 import commentsIcon from '../../../src/icon/ic-comments.png';
 import ImageIcon from '../../../src/icon/ic-Image.png';
 import sendEmailIcon from '../../../src/icon/ic-send-email.png';
@@ -23,31 +23,30 @@ export default class Comments extends Component {
     super(props);
     this.state = {
       showComments: 0,
-      user_id:0,
       inputComment:'',
       inputChildComment:'',
       arrIdComment:{},
+      _has_liked:{},
     }
-  }
-  requestLogin(comment_id){
-    checkLogin().then(e=>{
-      if(e.id===undefined){
-        this.props.navigation.navigate('LoginScr');
-      }else{
-        this.setState({user_id:e.id,showComments:comment_id})
-      }
-    });
+
   }
 
+  uploadImage(){
+    // ImagePicker.openPicker({
+    //     multiple: true
+    //   }).then(images => {
+    //     console.log(images);
+    //   });
+  }
   postComment(comment_id){
     if(this.state.inputChildComment!=='' || this.state.inputComment!==''){
       const arr = new FormData();
-      arr.append('user_id',this.state.user_id);
+      arr.append('user_id',this.props.userId);
       arr.append('content_id',this.props.idContent);
       arr.append('comment_id',comment_id);
       arr.append('content',comment_id===0 ? this.state.inputComment.toString() : this.state.inputChildComment.toString());
 
-      postCommentApi(`${global.url}${'content-create-comment'}`,arr);
+      postApi(`${global.url}${'content-create-comment'}`,arr);
       if(comment_id===0)
       this.setState({inputComment:''});
       else
@@ -56,31 +55,36 @@ export default class Comments extends Component {
   }
 
   likeComment(comment_id){
-    //this.setState({arrIdComment:this.state.arrIdComment.concat(e.id)})
+    this.props.requestLogin();
     const arr = new FormData();
-    arr.append('user_id',this.state.user_id);
+    arr.append('user_id',this.props.userId);
     arr.append('comment_id',comment_id);
-    postCommentApi(`${global.url}${'content-like-comment'}`,arr).then(e=>{
-      this.setState({ arrIdComment: Object.assign(this.state.arrIdComment,{[comment_id]:e.data.like}) });
+    postApi(`${global.url}${'content-like-comment'}`,arr).then(e=>{
+      this.setState({
+        arrIdComment: Object.assign(this.state.arrIdComment,{[comment_id]:e.data.like}),
+        _has_liked: Object.assign(this.state._has_liked,{[comment_id]:e.info==='unlike' ? 0 : 1}),
+     });
     });
   }
 
   render() {
-    //console.log('this.state.arrIdComment',this.state.arrIdComment);
     const {
       txtComments,padLeft,colorText,mrgTop,show,hide,rowFlex
     } = styles;
     //console.log("this.props.navigation=",util.inspect(this.props.navigation,false,null));
     const {idContent,listComment} = this.props;
+    //console.log('this.state.idContent====',_has_liked)
+
     return (
       <View>
           <View>
-            <TextInput onFocus={()=>this.requestLogin(0)} style={[txtComments,padLeft]} underlineColorAndroid='transparent'
+            <TextInput onFocus={()=>{this.props.requestLogin();}} style={[txtComments,padLeft]} underlineColorAndroid='transparent'
             placeholder="Bình luận của bạn ..."
             onChangeText={(text) => this.setState({inputComment: text})}
             value={this.state.inputComment}
              />
-            <TouchableOpacity style={{position:'absolute',right:45,top:Platform.OS==='ios' ? 15 : 18}}>
+            <TouchableOpacity style={{position:'absolute',right:45,top:Platform.OS==='ios' ? 15 : 18}}
+            onPress={this.uploadImage()}>
             <Image source={ImageIcon} style={{width:20,height:20,}} />
             </TouchableOpacity>
 
@@ -92,10 +96,13 @@ export default class Comments extends Component {
           </View>
           {listComment.length>0 ?
             listComment.map((e)=>(
-              <View onLayout={()=>this.setState({arrIdComment:Object.assign(this.state.arrIdComment,{[e.id]:e.like_comment}) })} key={e.id} style={{borderBottomWidth:1,borderBottomColor:'#E1E7EC',paddingBottom:10}}>
+              <View onLayout={()=>{this.setState({arrIdComment:Object.assign(this.state.arrIdComment,{[e.id]:e.like_comment}),
+                _has_liked: Object.assign(this.state._has_liked,{[e.id]:e._has_liked.length}) }); }}
+              key={e.id} style={{borderBottomWidth:1,borderBottomColor:'#E1E7EC',paddingBottom:10}}>
               <View style={rowFlex}>
                 <Image source={{uri:`${e._comment_by.avatar}`}} style={{width:66,height:66,borderRadius:33}} />
                 <View>
+
                     <View style={{paddingLeft:10}}>
                       <Text style={colorText}>{e._comment_by.full_name}</Text>
                     </View>
@@ -120,9 +127,10 @@ export default class Comments extends Component {
 
               <View style={{padding:15,paddingLeft:0,flexDirection:'row'}}>
                   <TouchableOpacity style={{flexDirection:'row',}}
-                  onPress={()=>this.likeComment(e.id)}>
-                    <Image style={{width:22,height:18,marginRight:5}} source={likeIcon} />
+                  onPress={()=>{this.likeComment(e.id);}}>
+                    <Image style={{width:22,height:18,marginRight:5}} source={this.state._has_liked[e.id]!==0 ? likeFullIcon : likeIcon} />
                     <Text>{this.state.arrIdComment[e.id]} like</Text>
+
                   </TouchableOpacity>
                   <TouchableOpacity
                   onPress={()=>{this.setState({showComments:e.id}); }}
@@ -134,12 +142,13 @@ export default class Comments extends Component {
 
               <View style={this.state.showComments===e.id ? show : hide}>
               <View>
-                <TextInput onFocus={()=>this.requestLogin(this.state.showComments)} style={[txtComments,padLeft]} underlineColorAndroid='transparent'
+                <TextInput onFocus={()=>{this.props.requestLogin(); }} style={[txtComments,padLeft]} underlineColorAndroid='transparent'
                 placeholder="Bình luận của bạn ..."
                 onChangeText={(cm) => this.setState({inputChildComment: cm})}
                 value={this.state.inputChildComment}
                  />
-                <TouchableOpacity style={{position:'absolute',right:45,top:Platform.OS==='ios' ? 15 : 18}}>
+                <TouchableOpacity style={{position:'absolute',right:45,top:Platform.OS==='ios' ? 15 : 18}}
+                onPress={this.uploadImage()}>
                 <Image source={ImageIcon} style={{width:20,height:20,}} />
                 </TouchableOpacity>
 
@@ -153,7 +162,9 @@ export default class Comments extends Component {
 
                 {e._replies.length>0 ?
                   e._replies.map(r =>(
-                    <View onLayout={()=>this.setState({arrIdComment:Object.assign(this.state.arrIdComment,{[r.id]:r.like_comment}) })} style={{width:width-70,marginLeft:70,marginTop:10,borderTopWidth:1,borderTopColor:'#E1E7EC'}} key={r.id}>
+                    <View onLayout={()=>this.setState({arrIdComment:Object.assign(this.state.arrIdComment,{[r.id]:r.like_comment}),
+                    _has_liked: Object.assign(this.state._has_liked,{[r.id]:r._has_liked.length}), })}
+                    style={{width:width-70,marginLeft:70,marginTop:10,borderTopWidth:1,borderTopColor:'#E1E7EC'}} key={r.id}>
                     <View style={rowFlex}>
                       <Image source={{uri:`${r._comment_by.avatar}`}} style={{width:66,height:66,borderRadius:33}} />
                       <View>
@@ -181,8 +192,8 @@ export default class Comments extends Component {
 
                     <View style={{paddingTop:15,paddingLeft:0,flexDirection:'row'}}>
                         <TouchableOpacity style={{flexDirection:'row',}}
-                        onPress={()=>this.likeComment(r.id)}>
-                          <Image style={{width:22,height:18,marginRight:5}} source={likeIcon} />
+                        onPress={()=>{this.likeComment(r.id);}}>
+                          <Image style={{width:22,height:18,marginRight:5}} source={this.state._has_liked[r.id]!==0 ? likeFullIcon : likeIcon} />
                           <Text>{this.state.arrIdComment[r.id]} like</Text>
                         </TouchableOpacity>
                     </View>

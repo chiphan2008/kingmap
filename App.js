@@ -31,11 +31,9 @@ import SignUpScreen from './component/page_user/SignUpScreen';
 import ForgotPasswordScreen from './component/page_user/ForgotPasswordScreen';
 import VerifyAccountScreen from './component/page_user/VerifyAccountScreen';
 import checkLocation from './component/api/checkLocation';
-import getApiKey from './component/api/getApiKey';
+//import getApiKey from './component/api/getApiKey';
 
 //AsyncStorage.removeItem('@LocationKey:key');
-getApiKey();
-
 
 const styles = StyleSheet.create({
   container: {

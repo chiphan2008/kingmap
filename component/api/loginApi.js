@@ -5,7 +5,7 @@ const loginApi = async (url,param) => {
 
     const auth_key = await AsyncStorage.getItem('@AuthKey:key');
     auth_key = JSON.parse(auth_key);
-    
+
     const acc = new FormData();
     acc.append('username',param.username.toString());
     acc.append('password',param.password.toString());
@@ -20,7 +20,7 @@ const loginApi = async (url,param) => {
       });
     let responseJson = await response.json();
     if(responseJson.code===200){
-      AsyncStorage.setItem('@MyAccount:key', JSON.stringify(responseJson.data));
+      AsyncStorage.setItem('@MyAccount:key', JSON.stringify(Object.assign(responseJson.data[0],{'pwd':param.password.toString()})));
     }
     return responseJson;
   } catch (error) {
