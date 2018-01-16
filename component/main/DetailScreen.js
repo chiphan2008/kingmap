@@ -57,8 +57,6 @@ export default class DetailScreen extends Component {
         },
       },
 
-      showInfo : false,
-      showShare : false,
       user_id:0,
       pwd:'',
       ema:'',
@@ -66,6 +64,8 @@ export default class DetailScreen extends Component {
       vote:0,
       hasLiked:0,
       scroll:true,
+      savelike:false,
+      collection:false,
       notifyInfo:'',
     }
     checkLogin().then(e=>{
@@ -144,10 +144,13 @@ export default class DetailScreen extends Component {
   onRegionChange(region) {
     this.setState({ region });
   }
+  callCollect(){
+    this.setState({collection:true,scroll:false});
+  }
   saveLike(routing){
     this.requestLogin();
     getApi(`${global.url}${routing}${'?content='}${this.props.navigation.state.params.idContent}${'&user='}${this.state.user_id}`).then(e=>
-      {this.setState({scroll:!this.state.scroll,});
+      {this.setState({savelike:true,scroll:false});
         switch (routing) {
           case 'like':
               this.setState({liked:e.data.like,hasLiked:e.data.is_like});
@@ -200,6 +203,7 @@ export default class DetailScreen extends Component {
         userId={this.state.user_id}
         requestLogin={this.requestLogin.bind(this)}
         saveLike={this.saveLike.bind(this)}
+        callCollect={this.callCollect.bind(this)}
         />
         <Content
         listContent={this.state.listData.content}
@@ -258,13 +262,24 @@ export default class DetailScreen extends Component {
         />
 
 
-        <View style={[saveContentStyle, this.state.scroll===false ? show : hide]}>
+        <View style={[saveContentStyle, this.state.savelike ? show : hide]}>
           <TouchableOpacity
-          onPress={()=>this.setState({scroll:!this.state.scroll})}>
+          onPress={()=>this.setState({scroll:true,savelike:false})}>
           <Image source={checkinIC} style={imgSave} />
           </TouchableOpacity>
           <Text style={{color:'#fff',fontSize:18}}>{this.state.notifyInfo}</Text>
         </View>
+
+        <TouchableOpacity
+        onPress={()=>this.setState({collection:false,scroll:true})}
+        style={[saveContentStyle, this.state.collection ? show : hide]}>
+          <View style={{width:width-100,borderRadius:3,backgroundColor:'#fff',padding:15,marginBottom:7}}>
+            <Text style={{color:'#6587A8',fontSize:18}}>{`${'Tạo mới'}`.toUpperCase()}</Text>
+            <View style={{flexDirection:'row',marginBottom:7}}>
+              <TextInput underlineColorAndroid={'transparent'} style={{borderColor:'#E1E7EC',borderWidth:1,borderRadius:1,width:width-180}} />
+            </View>
+          </View>
+        </TouchableOpacity>
 
       </ScrollView>
     );

@@ -6,7 +6,7 @@ import {
   Platform,Dimensions,TouchableOpacity,
   WebView,
 } from 'react-native';
-import util from 'util';
+//import util from 'util';
 //import FacebookPlayer from 'react-facebook-player';
 import global from '../../global';
 

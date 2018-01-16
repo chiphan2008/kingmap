@@ -201,17 +201,25 @@ export default class CategoryScreen extends Component {
           {this.state.markers.map((marker,index) => {
             return (
             <MapView.Marker
-
               key={marker.id}
               coordinate={{
                 latitude: Number(marker.lat),
                 longitude: Number(marker.lng),
               }}
-              title={marker.name}
-              description={`${marker.address}${', '}${marker._district.name}${', '}${marker._city.name}${', '}${marker._country.name}`}
-              onPress={()=>navigate('DetailScr',{idContent:marker.id,lat:marker.lat,lng:marker.lng})}
+
             >
             <Image source={{uri:`${global.url_media}${marker._category_type.marker}`}} style={{width:48,height:54}} />
+
+            <MapView.Callout
+            onPress={()=>navigate('DetailScr',{idContent:marker.id,lat:marker.lat,lng:marker.lng})}>
+              <TouchableOpacity onPress={()=>navigate('DetailScr',{idContent:marker.id,lat:marker.lat,lng:marker.lng})}>
+              <View style={{height: 45,width: 300,alignItems:'center',borderRadius:3}}>
+              <Text style={{fontWeight:'bold'}}>{marker.name}</Text>
+              <Text numberOfLines={1}>{`${marker.address}${', '}${marker._district.name}${', '}${marker._city.name}${', '}${marker._country.name}`}</Text>
+              </View>
+              </TouchableOpacity>
+            </MapView.Callout>
+
             </MapView.Marker>
           )
         })}

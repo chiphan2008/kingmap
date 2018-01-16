@@ -5,7 +5,7 @@ import {
   View,Text,StyleSheet,Image,TextInput,
   Platform,Dimensions,TouchableOpacity,
 } from 'react-native';
-import util from 'util';
+//import util from 'util';
 import global from '../../global';
 
 import arrowLeft from '../../../src/icon/ic-white/arrow-left.png';
@@ -67,7 +67,7 @@ export default class Header extends Component {
                 <Image source={socialIC} style={shareIC} />
                 <Text style={colorWhite}>Chia sẻ</Text>
             </TouchableOpacity>
-            <TouchableOpacity  style={{alignItems:'center'}}>
+            <TouchableOpacity onPress={()=>{this.props.callCollect()}} style={{alignItems:'center'}}>
                 <Image source={saveIC} style={imgCheckin} />
                 <Text style={colorWhite}>Sưu tập</Text>
             </TouchableOpacity>
